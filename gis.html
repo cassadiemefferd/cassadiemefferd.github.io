@@ -31,7 +31,7 @@
 					<section id="two">
 						<div class="row">
 							<article class="col-6 col-12-xsmall work-item">
-								<a href="gis.html" class="image fit thumb"><img src="images/thumbs/01.jpg" alt="" /></a>
+								<a href="images/fulls/01.jpg" class="image fit thumb"><img src="images/thumbs/01.jpg" alt="" /></a>
 								<h3>Beaver Map</h3>
 								<p>description of the Beaver Map project.</p>
 							</article>
@@ -440,10 +440,28 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
+            <script src="assets/js/jquery.poptrox.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 
+			<script>
+                $(window).on('load', function() {
+                    $('#gallery').poptrox({
+                        caption: function($a) { return $a.next('h3').text(); },
+                        overlayColor: '#2c2c2c',
+                        overlayOpacity: 0.85,
+                        popupCloserText: '',
+                        popupLoaderText: '',
+                        selector: '.work-item a.image',
+                        usePopupCaption: true,
+                        usePopupDefaultStyling: false,
+                        usePopupEasyClose: false,
+                        usePopupNav: true,
+                        windowMargin: (breakpoints.active('<=small') ? 0 : 50)
+                    });
+                });
+            </script>
 	</body>
 </html>
