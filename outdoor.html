@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Cassadie Mefferd</title>
+		<title>Cassadie Mefferd - Outdoor Experience Log</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -27,44 +27,36 @@
 
 				
 
-				<!-- Two -->
+				<!-- One: Outdoor Experience Log -->
+					<section id="one">
+						<ul class="actions small">
+							<li><a href="index.html" class="button small icon solid fa-arrow-left">Back to Home</a></li>
+							<li><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false" target="_blank" rel="noopener noreferrer" class="button small icon solid fa-external-link-alt">Open Full Screen</a></li>
+						</ul>
+						<header class="major">
+							<h2>Outdoor Experience Log</h2>
+							<p>Spreadsheet documenting backcountry leadership, expedition days, and field experience.</p>
+						</header>
+						<div class="sheet-container" style="width: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); margin: 2em 0;">
+							<iframe 
+								src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false"
+								style="width: 100%; height: 75vh; min-height: 550px; border: 1px solid #e0e0e0; display: block;"
+								frameborder="0">
+							</iframe>
+						</div>
+					</section>
+
+				<!-- Two: Gallery (commented out until you add outdoor photos/projects)
 					<section id="two">
 						<div class="row">
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="gis.html" class="image fit thumb"><img src="images/thumbs/01.jpg" alt="" /></a>
-								<h3>Geographic Information Systems [GIS] Portfolio</h3>
-								<p>Portfolio showcasing projects and work in Geographic Information Systems. Remote Sensing. Cartography. Geospacial Statistics.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/02.jpg" class="image fit thumb"><img src="images/thumbs/02.jpg" alt="" /></a>
-								<h3>Title</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="outdoor.html" class="image fit thumb"><img src="images/thumbs/03.jpg" alt="" /></a>
-								<h3>Outdoor Experience Log</h3>
-								<p>Spreadsheet documenting experience guiding participants in the backcountry.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/04.jpg" class="image fit thumb"><img src="images/thumbs/04.jpg" alt="" /></a>
-								<h3>Certifications</h3>
-								<p>Collection of certifications obtained.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/05.jpg" class="image fit thumb"><img src="images/thumbs/05.jpg" alt="" /></a>
-								<h3>Nunc enim commodo aliquet</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
-							</article>
-							<article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/06.jpg" class="image fit thumb"><img src="images/thumbs/06.jpg" alt="" /></a>
-								<h3>Risus ornare lacinia</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
+                            <article class="col-6 col-12-xsmall work-item">
+								<a href="images/fulls/01.jpg" class="image fit thumb"><img src="images/thumbs/01.jpg" alt="" /></a>
+								<h3>Trip Highlights</h3>
+								<p>Description.</p>
 							</article>
 						</div>
-						<ul class="actions">
-							<li><a href="#" class="button">Full Portfolio</a></li>
-						</ul>
 					</section>
+				-->
 
 				<!-- Three -->
 					<section id="three">
@@ -440,10 +432,28 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
+            <script src="assets/js/jquery.poptrox.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 
+			<script>
+                $(window).on('load', function() {
+                    $('#gallery').poptrox({
+                        caption: function($a) { return $a.next('h3').text(); },
+                        overlayColor: '#2c2c2c',
+                        overlayOpacity: 0.85,
+                        popupCloserText: '',
+                        popupLoaderText: '',
+                        selector: '.work-item a.image',
+                        usePopupCaption: true,
+                        usePopupDefaultStyling: false,
+                        usePopupEasyClose: false,
+                        usePopupNav: true,
+                        windowMargin: (breakpoints.active('<=small') ? 0 : 50)
+                    });
+                });
+            </script>
 	</body>
 </html>
