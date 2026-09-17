@@ -1,0 +1,168 @@
+// Upload parcel shapefile
+var parcel = ee.FeatureCollection("projects/gisremotesensing-492014/assets/Eagle_county_parcels");
+// Changed 'table' to 'parcel' for my own organization and understanding
+
+// Zoom and center map on parcel
+Map.centerObject(parcel, 12);
+Map.addLayer(parcel, {}, "Parcel");
+
+
+// Cloud masking function removes clouds, shadows, and water
+function maskLandsatClouds(image) {
+  var cloudShadowBitMask = (1 << 4); // Bit 4 identifies cloud shadow
+  var cloudsBitMask = (1 << 3); // Bit 3 identifies clouds
+  var waterBitMask = (1 << 7); // Bit 7 identifies water
+  
+  var qa = image.select('QA_PIXEL'); // Get the pixel quality band
+
+  // All flags set to zero = clear land, no cloud, shadow, or water
+  var mask = qa.bitwiseAnd(cloudShadowBitMask).eq(0)
+    .and(qa.bitwiseAnd(cloudsBitMask).eq(0))
+    .and(qa.bitwiseAnd(waterBitMask).eq(0));
+
+  return image.updateMask(mask);
+}
+
+
+// Landsat 5 composite (summer 2005)
+var L5 = ee.ImageCollection("LANDSAT/LT05/C02/T1_L2");
+
+var L5_2005 = L5.filterBounds(parcel)
+  .filterDate('2005-06-01','2005-08-31') // composite of the summer months in 2005
+  .filterMetadata('CLOUD_COVER','less_than',40)
+  .map(maskLandsatClouds)
+  .mean()
+  .clip(parcel);
+
+// NDVI for 2005
+var NDVI_2005 = L5_2005
+  .normalizedDifference(['SR_B4','SR_B3']) // L5 NDVI = (B4 NIR - B3 Red) / (B4 NIR + B3 Red)
+  .rename('NDVI_2005');
+
+
+// Landsat 8 composite (summer 2015)
+var L8 = ee.ImageCollection("LANDSAT/LC08/C02/T1_L2");
+
+var L8_2015 = L8.filterBounds(parcel)
+  .filterDate('2015-06-01','2015-08-31') // composite of the summer months in 2015
+  .filterMetadata('CLOUD_COVER','less_than',40)
+  .map(maskLandsatClouds)
+  .mean()
+  .clip(parcel);
+
+// NDVI for 2015
+var NDVI_2015 = L8_2015
+  .normalizedDifference(['SR_B5','SR_B4']) // L8 NDVI = (B5 NIR - B4 Red) / (B5 NIR + B4 Red)
+  .rename('NDVI_2015');
+
+
+// Landsat 8 composite (summer 2025)
+var L8_2025 = L8.filterBounds(parcel)
+  .filterDate('2025-06-01','2025-08-31') // composite of the summer months in 2025
+  .filterMetadata('CLOUD_COVER','less_than',40)
+  .map(maskLandsatClouds)
+  .mean()
+  .clip(parcel);
+
+// NDVI for 2025
+var NDVI_2025 = L8_2025
+  .normalizedDifference(['SR_B5','SR_B4']) // L8 NDVI = (B5 NIR - B4 Red) / (B5 NIR + B4 Red)
+  .rename('NDVI_2025');
+
+
+// NDVI display settings
+// Same range is used for all three years so the maps can be compared fairly
+var ndviVis = {
+  min: -0.2, // low NDVI values show dry, stressed, bare, or less vegetated areas
+  max: 0.8, // high NDVI values show healthier green vegetation
+  palette: ['brown','yellow','green']
+};
+
+Map.addLayer(NDVI_2005, ndviVis, 'NDVI 2005');
+Map.addLayer(NDVI_2015, ndviVis, 'NDVI 2015');
+Map.addLayer(NDVI_2025, ndviVis, 'NDVI 2025');
+
+
+// Mean NDVI values
+var mean2005 = NDVI_2005.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: parcel.geometry(),
+  scale: 30,
+  maxPixels: 1e13
+});
+
+var mean2015 = NDVI_2015.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: parcel.geometry(),
+  scale: 30,
+  maxPixels: 1e13
+});
+
+var mean2025 = NDVI_2025.reduceRegion({
+  reducer: ee.Reducer.mean(),
+  geometry: parcel.geometry(),
+  scale: 30,
+  maxPixels: 1e13
+});
+
+print('Mean NDVI 2005:', mean2005);
+print('Mean NDVI 2015:', mean2015);
+print('Mean NDVI 2025:', mean2025);
+
+
+// Histograms show the spread of NDVI values across the parcel
+print(ui.Chart.image.histogram({
+  image: NDVI_2005,
+  region: parcel.geometry(),
+  scale: 30
+}).setOptions({title: 'NDVI Histogram 2005'}));
+
+print(ui.Chart.image.histogram({
+  image: NDVI_2015,
+  region: parcel.geometry(),
+  scale: 30
+}).setOptions({title: 'NDVI Histogram 2015'}));
+
+print(ui.Chart.image.histogram({
+  image: NDVI_2025,
+  region: parcel.geometry(),
+  scale: 30
+}).setOptions({title: 'NDVI Histogram 2025'}));
+
+// clip NDVI rasters to parcel before export
+// GeoTIFFs export as rectangles, but this masks pixels outside the parcel as NoData
+var NDVI_2005_clip = NDVI_2005.clip(parcel.geometry());
+var NDVI_2015_clip = NDVI_2015.clip(parcel.geometry());
+var NDVI_2025_clip = NDVI_2025.clip(parcel.geometry());
+
+
+// Export clipped NDVI rasters to Google Drive
+Export.image.toDrive({
+  image: NDVI_2005_clip,
+  description: 'NDVI_2005_clipped',
+  folder: 'GEE_exports',
+  region: parcel.geometry(),
+  scale: 30,
+  crs: 'EPSG:26913',
+  maxPixels: 1e13
+});
+
+Export.image.toDrive({
+  image: NDVI_2015_clip,
+  description: 'NDVI_2015_clipped',
+  folder: 'GEE_exports',
+  region: parcel.geometry(),
+  scale: 30,
+  crs: 'EPSG:26913',
+  maxPixels: 1e13
+});
+
+Export.image.toDrive({
+  image: NDVI_2025_clip,
+  description: 'NDVI_2025_clipped',
+  folder: 'GEE_exports',
+  region: parcel.geometry(),
+  scale: 30,
+  crs: 'EPSG:26913',
+  maxPixels: 1e13
+});
