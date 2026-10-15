@@ -37,6 +37,151 @@
 					padding: 2em 1.5em !important;
 				}
 			}
+
+			/* Three boxes layout */
+			.academic-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 2rem;
+				margin: 2em 0 3em 0;
+			}
+
+			.academic-card {
+				background: #ffffff;
+				border: 1px solid #e5e5e5;
+				border-radius: 10px;
+				box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+				padding: 1.5em;
+				display: flex;
+				flex-direction: column;
+				box-sizing: border-box;
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+
+			.academic-card:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+			}
+
+			.academic-badge {
+				display: inline-block;
+				align-self: flex-start;
+				font-size: 0.72rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.8px;
+				padding: 4px 10px;
+				border-radius: 20px;
+				margin-bottom: 1em;
+				background: #f0f4f8;
+				color: #49658b;
+			}
+
+			.academic-media-box {
+				width: 100%;
+				height: 330px;
+				background: #f8f9fa;
+				border: 1px solid #ebebeb;
+				border-radius: 8px;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 1.25em;
+				position: relative;
+			}
+
+			/* Portrait paper preview */
+			.paper-preview {
+				width: 215px;
+				height: 290px;
+				background: #ffffff;
+				border: 1px solid #dcdcdc;
+				border-radius: 4px;
+				box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 1.5em 1em;
+				text-align: center;
+				text-decoration: none;
+				color: inherit;
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+
+			.paper-preview:hover {
+				transform: scale(1.02);
+				box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+			}
+
+			/* Landscape poster preview */
+			.poster-preview {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: #181818;
+				text-decoration: none;
+				overflow: hidden;
+			}
+
+			.poster-preview img {
+				max-width: 100%;
+				max-height: 100%;
+				object-fit: contain;
+				display: block;
+				transition: transform 0.2s ease;
+			}
+
+			.poster-preview:hover img {
+				transform: scale(1.02);
+			}
+
+			/* Flipbook iframe container */
+			.flipbook-preview {
+				width: 100%;
+				height: 100%;
+				background: #ffffff;
+			}
+
+			.flipbook-preview iframe {
+				width: 100%;
+				height: 100%;
+				border: 0;
+				display: block;
+			}
+
+			.academic-card h3 {
+				font-size: 1.15em;
+				line-height: 1.35em;
+				margin: 0 0 0.5em 0;
+				color: #333333;
+			}
+
+			.academic-card p {
+				font-size: 0.85em;
+				line-height: 1.6em;
+				color: #666666;
+				margin: 0 0 1.25em 0;
+				flex-grow: 1;
+			}
+
+			.academic-card .card-actions {
+				margin-top: auto;
+				padding-top: 1em;
+				border-top: 1px solid #f0f0f0;
+			}
+
+			@media screen and (max-width: 1080px) {
+				.academic-grid {
+					grid-template-columns: 1fr;
+				}
+				.academic-media-box {
+					height: 380px;
+				}
+			}
 		</style>
 	</head>
 	<body class="is-preload">
@@ -59,492 +204,70 @@
                         <section id="three">
 						<header class="major">
 							<h2>Capstone Project</h2>
-							<p>SUS-4800 Transdisciplinary Research & Practice I</p>
-							<p>SUS-4900 Transdisciplinary Research & Practice II</p>
+							<p>SUS-4800 Transdisciplinary Research & Practice I · SUS-4900 Transdisciplinary Research & Practice II</p>
 						</header>
-						<div class="row">
 
-							<!-- Poster -->
-                            
-                            <article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_4_29_26_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_4_29_26_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_4_29_26_thumb.jpg"/>
+						<div class="academic-grid">
+
+							<!-- Box 1: Paper (Vertical Portrait) -->
+							<article class="academic-card">
+								<span class="academic-badge"><i class="icon solid fa-file-alt"></i> Research Paper</span>
+								<div class="academic-media-box">
+									<a href="documents/capstone_paper.pdf" target="_blank" class="paper-preview" title="View Capstone Research Paper">
+										<!-- If you have a cover image, you can replace the placeholder below with:
+										<img src="images/thumbs/capstone_paper.jpg" alt="Capstone Paper Cover" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" /> -->
+										<i class="icon solid fa-file-pdf" style="font-size: 3.5rem; color: #c0392b; margin-bottom: 0.4em;"></i>
+										<strong style="font-size: 0.95em; line-height: 1.35; color: #2c3e50;">Senior Capstone<br>Research Paper</strong>
+										<span style="font-size: 0.72em; color: #7f8c8d; margin-top: 0.6em; text-transform: uppercase; letter-spacing: 0.5px;">Portrait · PDF</span>
 									</a>
 								</div>
-								<h3 style="margin-bottom: 0.20em;">From Green to Brown: Summer Vegetation Change of ECSD Parcel Over the Past 20 Years</h3>
-								<p>[4/29/26]<br />Created as a project for Remote Sensing using Google Earth Engine to evaluate vegetation health on a 40-acre Eagle County School District parcel considered for a farm-to-school program. The analysis processed Landsat imagery across 2005, 2015, and 2025 to calculate Normalized Difference Vegetation Index (NDVI) summer composites. Results confirmed a steady decline in mean NDVI over the past 20 years, providing spatial evidence to help guide future agricultural restoration efforts.</p>
-							<!-- buttons for extra docs -->
-                              <section style="margin-bottom: 0.5rem;"></section>
-                                <ul class="actions small" style="display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; gap: 4px !important; list-style: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                                    <li style="flex: 1 1 0% !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important;">
-                                        <a href="documents/Cassadie_Mefferd_Remote_Sensing_Final_Project.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-desktop" style="display: block !important; width: 100% !important; padding: 0 2px !important; font-size: 0.65rem !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Slideshow</a>
-                                    </li>
-                                    <li style="flex: 1 1 0% !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important;">
-                                        <a href="documents/GIS_4_29_26_doc.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-file-alt" style="display: block !important; width: 100% !important; padding: 0 2px !important; font-size: 0.65rem !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Document</a>
-                                    </li>
-                                    <li style="flex: 1 1 0% !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important;">
-                                        <a href="documents/GIS_4_29_26.txt" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-file-code" style="display: block !important; width: 100% !important; padding: 0 2px !important; font-size: 0.65rem !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Code</a>
-                                    </li>
-                                </ul>
-                            </article>
-                            
-                            <!-- NDMI -->
-                            <article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_4_11_26_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_4_11_26_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_4_11_26_thumb.jpg"/>
-									</a>
+								<h3>Senior Capstone Research Paper</h3>
+								<p>Transdisciplinary research paper exploring human–beaver relationships, social dynamics, and collaborative pathways for building resilient watersheds.</p>
+								<div class="card-actions">
+									<ul class="actions small" style="margin: 0; display: flex; gap: 8px;">
+										<li><a href="documents/capstone_paper.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-file-pdf">View Paper</a></li>
+										<li><a href="documents/capstone_paper.pdf" download class="button small icon solid fa-download">Download</a></li>
+									</ul>
 								</div>
-								<h3 style="margin-bottom: 0.20em;">Normalized Difference Moisture Index (NDMI) for Routt County, CO</h3>
-								<p>[4/11/26]<br />Created for a Remote Sensing lab comparing spatial resolution and sensor outputs by calculating Normalized Difference Moisture Index (NDMI) across Routt County, CO. Using Google Earth Engine scripts, imagery was processed from both Landsat 8 (30 m) and Sentinel-2 (20 m) before exporting to ArcGIS Pro for a side-by-side comparison map. The project explored how differences in pixel resolution, spectral band configurations, and code execution affect county-wide moisture statistics and raster visualization.</p>
 							</article>
 
-							<!-- White River National Forest Tree Cover Change -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_4_1_26_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_4_1_26_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_4_1_26_thumb.jpg"/>
+							<!-- Box 2: Poster (Horizontal Landscape) -->
+							<article class="academic-card">
+								<span class="academic-badge"><i class="icon solid fa-image"></i> Research Poster</span>
+								<div class="academic-media-box">
+									<a href="images/fulls/capstone_poster.jpg" target="_blank" class="poster-preview" title="View Capstone Poster">
+										<img src="images/thumbs/capstone_poster.jpg" alt="Stories Shape Solutions - Capstone Poster" />
 									</a>
 								</div>
-								<h3 style="margin-bottom: 0.20em;">White River National Forest Tree Cover Change</h3>
-								<p>[4/1/26]<br />Completed for a Remote Sensing course as a first project using Google Earth Engine to analyze forest change within the White River National Forest. Hansen Global Forest Change imagery was processed to isolate tree canopy cover and forest loss, then mapped in ArcGIS Pro to highlight regional canopy shifts.</p>
+								<h3>Stories Shape Solutions: Human-Beaver Relationships</h3>
+								<p>Senior capstone presentation poster detailing methodology, 18 semi-structured interviews, key findings, and practical recommendations for watershed coexistence.</p>
+								<div class="card-actions">
+									<ul class="actions small" style="margin: 0; display: flex; gap: 8px;">
+										<li><a href="images/fulls/capstone_poster.jpg" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-search-plus">View Poster</a></li>
+										<li><a href="images/fulls/Cassadie's Final Capstone Poster.pdf" target="_blank" rel="noopener noreferrer" class="button small icon solid fa-file-pdf">Full PDF</a></li>
+									</ul>
+								</div>
 							</article>
 
-							<!-- Land Types in the Greenwood Fire Area -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_3_18_26_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_3_18_26_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_3_18_26_thumb.jpg"/>
-									</a>
+							<!-- Box 3: Flipbook (Interactive Flip Book) -->
+							<article class="academic-card">
+								<span class="academic-badge"><i class="icon solid fa-book-open"></i> Interactive Flipbook</span>
+								<div class="academic-media-box">
+									<div class="flipbook-preview">
+										<iframe allowfullscreen allow="autoplay; fullscreen; clipboard-write" scrolling="no" style="width: 100%; height: 100%; border: 0; display: block;" src="https://heyzine.com/flip-book/b34ff64d64.html"></iframe>
+									</div>
 								</div>
-								<h3 style="margin-bottom: 0.20em;">Land Types in the Greenwood Fire Area</h3>
-								<p>[3/18/26]<br />Analyzed post fire land cover by processing multi spectral Landsat satellite imagery in ArcGIS Pro. Using computer driven classification algorithms and noise reduction filters, satellite data was grouped by light reflectance patterns to identify distinct landscape types like forest, water, and burned area and evaluate map accuracy against official land cover datasets.</p>
+								<h3>Beaver Tales: Blending Science &amp; Storytelling</h3>
+								<p>An educational booklet created to bring science and storytelling together. Biologist-reviewed resource designed to inspire curiosity and action for watershed health.</p>
+								<div class="card-actions">
+									<ul class="actions small" style="margin: 0; display: flex; gap: 8px;">
+										<li><a href="https://heyzine.com/flip-book/b34ff64d64.html" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-external-link-alt">Open Full Screen</a></li>
+									</ul>
+								</div>
 							</article>
 
-                            <!-- Morgan Creek Fire Proj -->
-                            <article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_3_4_26_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_3_4_26_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_3_4_26_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Morgan Creek Fire, Routt County, CO</h3>
-								<p>[3/4/26]<br />Created as a mid-term project for Remote Sensing course evaluating vegetation recovery following the Morgan Creek Fire in Routt County, Colorado, by calculating NDVI from pre fire and post fire Landsat imagery in ArcGIS Pro. Zonal statistics revealed that while overall vegetation productivity across the burn perimeter declined, areas within a 200 foot buffer of beaver pond clusters maintained higher moisture levels and saw an average NDVI increase, demonstrating the role of beaver modified wetlands as ecological refugia.</p>
-							<!-- buttons for extra docs -->
-                             <section style="margin-bottom: 0.5rem;"></section>   
-                             <ul class="actions small" style="display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; gap: 4px !important; list-style: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                                    <li style="flex: 1 1 0% !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important;">
-                                        <a href="documents/GIS_3_4_26_slides.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-desktop" style="display: block !important; width: 100% !important; padding: 0 2px !important; font-size: 0.65rem !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Slideshow</a>
-                                    </li>
-                                    <li style="flex: 1 1 0% !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important;">
-                                        <a href="documents/GIS_3_4_26_doc.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-file-alt" style="display: block !important; width: 100% !important; padding: 0 2px !important; font-size: 0.65rem !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Document</a>
-                                    </li>
-                                </ul>
-                            </article>
-
-							<!-- Snow Cover -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_2_11_26_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_2_11_26_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_2_11_26_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Snow Cover in Kings Canyon National Park, CA</h3>
-								<p>[2/11/26]<br />Compared winter snowpack between a dry year (2016) and a wet year (2017) in Kings Canyon National Park by calculating the Normalized Difference Snow Index from Landsat 8 imagery. Using ArcGIS Pro, NDSI outputs were categorized into confidence classes and analyzed with Tabulate Area to quantify spatial shifts, revealing a nearly 14% increase in high confidence snow extent during the wet year.</p>
-							</article>
-
-							<!-- Health of Vegetation -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_2_8_26_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_2_8_26_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_2_8_26_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Health of Vegetation Before and After the Greenwood Fire, MN</h3>
-								<p>[2/8/26]<br />Assessed early vegetation recovery one year after the Greenwood Fire in Minnesota by analyzing pre fire and post fire Landsat 8/9 imagery. NDVI values were calculated across both timeframes using Raster Calculator in ArcGIS Pro to isolate canopy change within the burn perimeter, highlighting spatial patterns of early plant regrowth alongside lingering fire impacts.</p>
-							</article>
-
-                            <!-- multi-photo -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_1_31_26_full.png", "caption": "Map"},
-										 {"src": "images/fulls/GIS_1_31_26_workflow.png", "caption": "Workflow"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_1_31_26_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_1_31_26_thumb.jpg" alt="Avy" />
-										<span class="photo-badge"><i class="icon solid fa-images"></i> 2 Photos</span>
-									</a>
-								
-								<h3 style="margin-bottom: 0.20em;">Burn Severity of the Greenwood Fire, MN</h3>
-                                <p>[1/31/26]<br />This map shows the dNBR which is the Normalized Burn Ratio for the Greenwood Fire area in Minnesota, using Landsat 8 imagery. Processed in ArcGIS Pro by evaluating shortwave infrared and near infrared bands from pre fire and post fire captures, the index was reclassified into burn severity tiers to map canopy loss across the fire perimeter.</p>
-                    </article>
-            </section>
-                            	
-
-<!-- GUIDED FIELD STUDY -->
-<section id="three">
-    <header class="major">
-        <h2>Guided Field Study</h2>
-        <p>GIS-1060</p>
-    </header>
-    <div class="row">
-        
-        <!-- GIS StoryMap Section -->
-        <article class="col-12 work-item" style="margin-top: 0;">
-    <h3>Interactive GIS StoryMap</h3>
-    <section style="margin-bottom: 1rem;">
-    <p>Description of this final project. Explore the full interactive map and report below:</p>
-</section>
-    <!-- Embed Container -->
-    <div style="position: relative; width: 100%; height: 600px; max-height: 80vh; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-        <iframe 
-            src="https://storymaps.arcgis.com/stories/4c5edae6ced141e19c81edb32a112017" 
-            width="100%" 
-            height="100%" 
-            frameborder="0" 
-            allowfullscreen 
-            allow="geolocation"
-            title="GIS StoryMap">
-        </iframe>
-    </div>
-</article>     
-</section>
-
-                    <!-- CARTOGRAPHY -->
-                    <section id="three">
-						<header class="major">
-							<h2>Cartography</h2>
-							<p>GIS-3100</p>
-						</header>
-						<div class="row">
-							
-                            <!-- NPS Final Proj -->
-                            <article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_4_29_25_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_4_29_25_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_4_29_25_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Most Visited National Parks</h3>
-								<p>[4/29/25]<br />Created as a final project for Cartography course analyzing average visitation rates across different national parks.</p>
-							<!-- buttons for extra docs -->
-                             <section style="margin-bottom: 0.5rem;"></section>   
-                             <ul class="actions small" style="display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; gap: 4px !important; list-style: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                                    <li style="flex: 1 1 0% !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important;">
-                                        <a href="documents/GIS_4_29_25_slides.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-desktop" style="display: block !important; width: 100% !important; padding: 0 2px !important; font-size: 0.65rem !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Slideshow</a>
-                                    </li>
-                                    <li style="flex: 1 1 0% !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important;">
-                                        <a href="documents/NPS_Metadata.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-file-alt" style="display: block !important; width: 100% !important; padding: 0 2px !important; font-size: 0.65rem !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Document</a>
-                                    </li>
-                                </ul>
-                            </article>
-							
-                            <!-- multi-photo -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_4_19_25a_full.png", "caption": "AIARE 1"},
-										 {"src": "images/fulls/GIS_4_19_25b_full.png", "caption": "avy rescue"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_4_19_25a_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_4_19_25a_thumb.jpg"/>
-										<span class="photo-badge"><i class="icon solid fa-images"></i> 2 Photos</span>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Snow Water Equivalent (SWE) by County, CO</h3>
-								<p>[4/19/25]<br />This lab compared Standard View and Cartogram view.</p>
-							</article>
-							
-                            <!-- Title -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/01.jpg"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/01.jpg" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/01.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">R & R-Studio</h3>
-								<p>[4/19/25]<br />description.</p>
-							</article>
-							
-                             <!-- multi-photo -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_4_3_25a_full.png", "caption": "Map"},
-										 {"src": "images/fulls/GIS_4_3_25b_full.png", "caption": "Graph"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_4_3_25a_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_4_3_25_thumb.png"/>
-										<span class="photo-badge"><i class="icon solid fa-images"></i> 2 Photos</span>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Bigfoot Sightings</h3>
-								<p>[4/3/25]<br />Q GIS?.</p>
-							</article>
-                            
-                    
-                            
-                            <!-- Title -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_3_20_25_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_3_20_25_thumb.jpg" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_3_20_25_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Moose Summer and Winter Habitat</h3>
-								<p>[3/20/25]<br />description.</p>
-							</article>
-
-                         
-                           
-                             <!-- Atlas of CO Proj -->
-                            <article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_2_27_25_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_2_27_25_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_2_27_25_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Atlas of Colorado</h3>
-								<p>[2/27/25]<br />This map is intended for tourists visiting Colorado to ski! The map shows all of the ski resorts in Colorado: whether they are on the IKON pass, the Epic pass, or an independent mountain. The map also shows nearby regional airports that someone may want to fly into instead of flying into DIA and having to drive. The major highways that people use to travel to ski areas are labeled, and other relevant roads are depicted.</p>
-							<!-- buttons for extra docs -->
-                             <section style="margin-bottom: 0.5rem;"></section>   
-                             <ul class="actions small" style="display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; gap: 4px !important; list-style: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-                                    <li style="flex: 1 1 0% !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important;">
-                                        <a href="documents/GIS_2_27_25_doc.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-file-alt" style="display: block !important; width: 100% !important; padding: 0 2px !important; font-size: 0.65rem !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">Document</a>
-                                    </li>
-                                </ul>
-                            </article>
-                            
-                    
-                    <!-- multi-photo -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_2_13_25_full.png", "caption": "Map"},
-										 {"src": "images/fulls/GIS_2_13_25_graph.png", "caption": "Graph"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_2_13_25_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_2_13_25_thumb.jpg"/>
-										<span class="photo-badge"><i class="icon solid fa-images"></i> 2 Photos</span>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Big Foot Sightings</h3>
-								<p>[3/20/25]<br />description.</p>
-							</article>
-
-                            <!-- Hiking Trails in Breckenridge, CO -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_2_6_25_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_2_6_25_thumb.jpg" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_2_6_25_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Hiking Trails in Breckenridge, CO</h3>
-								<p>[2/6/25]<br />description.</p>
-							</article>
-
-                            <!-- Title -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/thumbs/GIS_1_16_25_thumb.jpg"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/thumbs/GIS_1_16_25_thumb.jpg" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_1_16_25_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Latino Economic Index</h3>
-								<p>[1/16/25]<br />description.</p>
-							</article>
-						
-                        </div>
-					</section>
-
-                    <!-- INTRO TO GIS -->
-                    <section id="three">
-    <header class="major">
-        <h2>Intro to GIS</h2>
-        <p>GIS-3000</p>
-    </header>
-    <div class="row">
-        
-        <!-- Title -->
-<article class="col-6 col-12-xsmall work-item cert-gallery"
-         data-images='[
-             {"src": "images/fulls/GIS_11_25_24_full.png"}
-         ]'>
-    <div class="thumb-container" style="position: relative; height: 165px; overflow: hidden; border-radius: 4px;">
-        <!-- Embedded Scrollable PDF -->
-        <iframe src="documents/GIS_11_25_24_slides.pdf#toolbar=0&navpanes=0&view=FitH" 
-                style="width: 100%; height: 165px; border: 5px solid #ccc; display: block; background-color: #ffffff; pointer-events: auto;">
-        </iframe>
-
-        <!-- Lightbox Trigger Button (Poptrox Pop-Up) -->
-        <a href="images/fulls/GIS_11_25_24_full.png" 
-           class="image fit thumb" 
-           style="position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; background: rgba(0, 0, 0, 0.65); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none; z-index: 20; border: none;" 
-           title="Expand PDF Slide">
-            <span style="font-size: 14px; font-weight: bold; line-height: 1;">&#x26F6;</span>
-        </a>
-    </div>
-    <h3 style="margin-bottom: 0.20em; margin-top: 0.5em;">Final Project - Cottonwood Suitability along the Yampa River</h3>
-    <p>date.<br />description.</p>
-</article>
-
-							<!-- Where are the Mountain Goats? -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_11_6_24_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_11_6_24_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_11_6_24_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Where are the Mountain Goats?</h3>
-								<p>[11/6/24]<br />description.</p>
-							</article>
-
-							<!-- Title -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_10_23_24_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_10_23_24_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_10_23_24_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Title</h3>
-								<p>[10/23/24]<br />description.</p>
-							</article>
-
-							<!-- Title -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_9_25_24_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_9_25_24_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_9_25_24_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">U.S. Population Change from 2015-2020</h3>
-								<p>[9/25/24]<br />description.</p>
-							</article>
-
-                            <!-- Commercial Flood Risk in Guerneville, CA -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_9_18_24_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_9_18_24_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_9_18_24_thumb.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Commercial Flood Risk in Guerneville, CA</h3>
-								<p>[9/18/24]<br />description.</p>
-							</article>
-
-                            <!-- multi-photo -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_9_16_24a_full.png", "caption": "Map"},
-										 {"src": "images/fulls/GIS_9_16_24b_full.png", "caption": "Graph"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_9_16_24a_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_9_16_24_thumb.jpg"/>
-										<span class="photo-badge"><i class="icon solid fa-images"></i> 2 Photos</span>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Symbology & Data Classification</h3>
-								<p>[9/16/24]<br />description.</p>
-							</article>
-
-                            <!-- Colorado 14ers -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_9_4_24_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_9_4_24_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_9_4_24_thumb.png"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Colorado 14ers</h3>
-								<p>[9/4/24]<br />description.</p>
-							</article>
-
-                            <!-- Title -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/GIS_8_28_24_full.png"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/GIS_8_28_24_full.png" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/GIS_8_28_24_thumb.png"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Title</h3>
-								<p>[8/28/24]<br />description.</p>
-							</article>
-
-                            <!-- Title -->
-							<article class="col-6 col-12-xsmall work-item cert-gallery"
-									 data-images='[
-										 {"src": "images/fulls/01.jpg"}
-									 ]'>
-								<div class="thumb-container">
-									<a href="images/fulls/01.jpg" class="image fit thumb" data-poptrox="ignore">
-										<img src="images/thumbs/01.jpg"/>
-									</a>
-								</div>
-								<h3 style="margin-bottom: 0.20em;">Title</h3>
-								<p>[8/21/24]<br />description.</p>
-							</article>
 						</div>
 					</section>
-
 
 				<!-- Four -->
 				<!--
