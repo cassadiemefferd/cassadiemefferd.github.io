@@ -44,6 +44,28 @@
 				grid-template-columns: repeat(3, 1fr);
 				gap: 2rem;
 				margin: 2em 0 3em 0;
+				align-items: stretch;
+			}
+
+			@media screen and (max-width: 1080px) {
+				.academic-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			/* Two boxes layout (Biology Project) */
+			.academic-grid-2 {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 2rem;
+				margin: 2em 0 3em 0;
+				align-items: stretch;
+			}
+
+			@media screen and (max-width: 980px) {
+				.academic-grid-2 {
+					grid-template-columns: 1fr;
+				}
 			}
 
 			.academic-card {
@@ -55,6 +77,7 @@
 				display: flex;
 				flex-direction: column;
 				box-sizing: border-box;
+				height: 100%;
 				transition: transform 0.2s ease, box-shadow 0.2s ease;
 			}
 
@@ -75,6 +98,10 @@
 				margin-bottom: 1em;
 				background: #f0f4f8;
 				color: #49658b;
+				height: 26px;
+				line-height: 18px;
+				box-sizing: border-box;
+				flex-shrink: 0;
 			}
 
 			.academic-media-box {
@@ -89,12 +116,13 @@
 				justify-content: center;
 				margin-bottom: 1.25em;
 				position: relative;
+				flex-shrink: 0;
 			}
 
 			/* Portrait paper preview */
 			.paper-preview {
-				width: 215px;
-				height: 290px;
+				width: 230px;
+				height: 300px;
 				background: #ffffff;
 				border: 1px solid #dcdcdc;
 				border-radius: 4px;
@@ -108,6 +136,7 @@
 				text-decoration: none;
 				color: inherit;
 				transition: transform 0.2s ease, box-shadow 0.2s ease;
+				box-sizing: border-box;
 			}
 
 			.paper-preview:hover {
@@ -155,7 +184,8 @@
 
 			.academic-card h3 {
 				font-size: 1.15em;
-				line-height: 1.35em;
+				line-height: 1.4em;
+				min-height: 2.8em;
 				margin: 0 0 0.5em 0;
 				color: #333333;
 			}
@@ -166,21 +196,13 @@
 				color: #666666;
 				margin: 0 0 1.25em 0;
 				flex-grow: 1;
+				min-height: 4.8em;
 			}
 
 			.academic-card .card-actions {
 				margin-top: auto;
 				padding-top: 1em;
 				border-top: 1px solid #f0f0f0;
-			}
-
-			@media screen and (max-width: 1080px) {
-				.academic-grid {
-					grid-template-columns: 1fr;
-				}
-				.academic-media-box {
-					height: 380px;
-				}
 			}
 		</style>
 	</head>
@@ -268,6 +290,95 @@
 
 						</div>
 					</section>
+
+				<hr />
+
+				<!-- CBSMC -->
+				<section id="cbsmc">
+					<header class="major">
+						<h2>Community-Based Social Marketing Campaign (CBSMC)</h2>
+						<p>The Future of the Gear Room · Behavioral Research &amp; Sustainable Campus Campaign</p>
+					</header>
+
+					<div style="max-width: 600px; margin: 2em 0 3em 0;">
+						<article class="academic-card">
+							<span class="academic-badge"><i class="icon solid fa-desktop"></i> Slideshow Presentation</span>
+							<div class="academic-media-box" style="background: #222; border-radius: 8px; overflow: hidden;">
+								<iframe 
+									src="documents/CBSM_Campaign.pdf#toolbar=0&navpanes=0&view=Fit" 
+									style="width: 100%; height: 100%; border: 0; display: block;"
+									title="CBSMC Slideshow Presentation">
+								</iframe>
+							</div>
+							<h3>The Future of the Gear Room: A Community-Based Social Marketing Campaign</h3>
+							<p>Campaign presentation examining student behavior, equipment barriers, and practical marketing strategies to increase engagement and sustainable access for the campus gear room.</p>
+							<div class="card-actions">
+								<ul class="actions small" style="margin: 0; display: flex; gap: 8px;">
+									<li><a href="documents/CBSM_Campaign.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-desktop">Open Full Slideshow</a></li>
+									<li><a href="documents/CBSM_Campaign.pdf" download class="button small icon solid fa-download">Download PDF</a></li>
+								</ul>
+							</div>
+						</article>
+					</div>
+				</section>
+
+				<hr />
+
+				<!-- Biology Project -->
+				<section id="biology">
+					<header class="major">
+						<h2>Biology Project</h2>
+						<p>Field Biology &amp; Ecological Research</p>
+					</header>
+
+					<div class="academic-grid-2">
+
+						<!-- Box 1: Biology Poster (Horizontal Landscape) -->
+						<article class="academic-card">
+							<span class="academic-badge"><i class="icon solid fa-image"></i> Research Poster</span>
+							<div class="academic-media-box">
+								<a href="documents/biology_poster.pdf" target="_blank" class="poster-preview" style="background: #ffffff; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.5em; text-decoration: none;" title="View Biology Poster">
+									<!-- If you have an image thumbnail, you can replace the placeholder below with:
+									<img src="images/thumbs/biology_poster.jpg" alt="Biology Poster" style="max-width: 100%; max-height: 100%; object-fit: contain;" /> -->
+									<i class="icon solid fa-image" style="font-size: 3.5rem; color: #27ae60; margin-bottom: 0.4em;"></i>
+									<strong style="font-size: 0.95em; line-height: 1.35; color: #2c3e50;">Biology Research Poster</strong>
+									<span style="font-size: 0.72em; color: #7f8c8d; margin-top: 0.6em; text-transform: uppercase; letter-spacing: 0.5px;">Landscape · Poster</span>
+								</a>
+							</div>
+							<h3>Biology Research Poster</h3>
+							<p>Scientific presentation poster detailing field research methodology, species observation data, ecological findings, and visual analysis.</p>
+							<div class="card-actions">
+								<ul class="actions small" style="margin: 0; display: flex; gap: 8px;">
+									<li><a href="documents/biology_poster.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-search-plus">View Poster</a></li>
+									<li><a href="documents/biology_poster.pdf" download class="button small icon solid fa-download">Download</a></li>
+								</ul>
+							</div>
+						</article>
+
+						<!-- Box 2: Biology Paper (Vertical Portrait) -->
+						<article class="academic-card">
+							<span class="academic-badge"><i class="icon solid fa-file-alt"></i> Research Paper</span>
+							<div class="academic-media-box">
+								<a href="documents/biology_paper.pdf" target="_blank" class="paper-preview" title="View Biology Paper">
+									<!-- If you have an image thumbnail, you can replace the placeholder below with:
+									<img src="images/thumbs/biology_paper.jpg" alt="Biology Paper" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" /> -->
+									<i class="icon solid fa-file-pdf" style="font-size: 3.5rem; color: #27ae60; margin-bottom: 0.4em;"></i>
+									<strong style="font-size: 0.95em; line-height: 1.35; color: #2c3e50;">Biology Research Paper</strong>
+									<span style="font-size: 0.72em; color: #7f8c8d; margin-top: 0.6em; text-transform: uppercase; letter-spacing: 0.5px;">Portrait · PDF</span>
+								</a>
+							</div>
+							<h3>Biology Research Paper</h3>
+							<p>Comprehensive biological research paper presenting experimental design, literature review, ecological data collection, and conclusions.</p>
+							<div class="card-actions">
+								<ul class="actions small" style="margin: 0; display: flex; gap: 8px;">
+									<li><a href="documents/biology_paper.pdf" target="_blank" rel="noopener noreferrer" class="button small primary icon solid fa-file-pdf">View Paper</a></li>
+									<li><a href="documents/biology_paper.pdf" download class="button small icon solid fa-download">Download</a></li>
+								</ul>
+							</div>
+						</article>
+
+					</div>
+				</section>
 
 				<!-- Four -->
 				<!--
