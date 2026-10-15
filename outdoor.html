@@ -6,16 +6,40 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<style>
+			/* Full-screen layout overrides */
+			#header {
+				display: none !important;
+			}
+
+			#main {
+				margin-left: 0 !important;
+				width: 100% !important;
+				max-width: 100% !important;
+				padding: 3.5em 3.5em 2em 3.5em !important;
+			}
+
+			#footer {
+				display: block !important;
+				position: relative !important;
+				width: 100% !important;
+				background-color: #1f1815;
+				text-align: center;
+				padding: 3em 1em;
+			}
+
+			#footer .icons a {
+				color: rgba(255, 255, 255, 0.5);
+			}
+
+			@media screen and (max-width: 736px) {
+				#main {
+					padding: 2em 1.5em !important;
+				}
+			}
+		</style>
 	</head>
 	<body class="is-preload">
-
-		<!-- Header -->
-			<header id="header">
-				<div class="inner">
-					<a href="#" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
-					<h1><strong>Cassadie Mefferd</strong> · Outdoor Experience Log<br />
-				</div>
-			</header>
 
 		<!-- Main -->
 			<div id="main">
@@ -35,7 +59,7 @@
 						<div class="sheet-container" style="width: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); margin: 2em 0;">
 							<iframe 
 								src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false"
-								style="width: 100%; height: 75vh; min-height: 550px; border: 1px solid #e0e0e0; display: block;"
+								style="width: 100%; height: 80vh; min-height: 600px; border: 1px solid #e0e0e0; display: block;"
 								frameborder="0">
 							</iframe>
 						</div>
