@@ -37,10 +37,14 @@
 									<a href="images/fulls/DMM_certs.png" class="image fit thumb" data-poptrox="ignore">
 										<img src="images/thumbs/WFR_cert.jpg" alt="WRF" />
 									</a>
-									<li><a href="images/fulls/DMM_certs.png" download class="button small icon solid fa-download">Download</a></li>
 								</div>
 								<h3 style="margin-bottom: 0.20em;">Wilderness First Responder [WFR]</h3>
-								<p>Desert Mountain Medicine [DMM]<br />Issued: Mar 2026 · Expires: Mar 2029</p>
+								<div class="cert-card-details">
+									<p>Desert Mountain Medicine [DMM]<br />Issued: Mar 2026 · Expires: Mar 2029</p>
+									<div class="cert-card-actions">
+										<a href="images/fulls/DMM_certs.png" download class="button small icon solid fa-download">Download</a>
+									</div>
+								</div>
 							</article>
 
 							<!-- Permaculture Design -->
@@ -52,10 +56,14 @@
 									<a href="images/fulls/perm_cert.png" class="image fit thumb" data-poptrox="ignore">
 										<img src="images/thumbs/perm_cert_thumb.png" alt="Permaculture Design" />
 									</a>
-									<li><a href="images/fulls/perm_cert.png" download class="button small icon solid fa-download">Download</a></li>
 								</div>
 								<h3 style="margin-bottom: 0.20em;">Permaculture Design</h3>
-								<p>Colorado Mountain College<br />Issued: July 2026</p>
+								<div class="cert-card-details">
+									<p>Colorado Mountain College<br />Issued: July 2026</p>
+									<div class="cert-card-actions">
+										<a href="images/fulls/perm_cert.png" download class="button small icon solid fa-download">Download</a>
+									</div>
+								</div>
 							</article>
 
 							<!-- AIARE -->
@@ -69,10 +77,14 @@
 										<img src="images/thumbs/Avy_thumb.jpg" alt="Avy" />
 										<span class="photo-badge"><i class="icon solid fa-images"></i> 2 Photos</span>
 									</a>
-									<li><a href="images/fulls/avy.jpg" download class="button small icon solid fa-download">Download</a></li>
 								</div>
 								<h3 style="margin-bottom: 0.20em;">Avalanche</h3>
-								<p>American Institute for Avalanche Research and Education [AIARE]<br />Issued: Jan 2025</p>
+								<div class="cert-card-details">
+									<p>American Institute for Avalanche Research and Education [AIARE]<br />Issued: Jan 2025</p>
+									<div class="cert-card-actions">
+										<a href="images/fulls/avy.jpg" download class="button small icon solid fa-download">Download</a>
+									</div>
+								</div>
 							</article>
 
 							<!-- Watershed Management Technician -->
@@ -84,10 +96,14 @@
 									<a href="images/fulls/EPA.jpg" class="image fit thumb" data-poptrox="ignore">
 										<img src="images/thumbs/watershed_tech.jpg" alt="Watershed Tech" />
 									</a>
-									<li><a href="images/fulls/EPA.jpg" download class="button small icon solid fa-download">Download</a></li>
 								</div>
 								<h3 style="margin-bottom: 0.20em;">Watershed Management Technician</h3>
-								<p>U.S. Environmental Protection Agency [EPA]<br />Issued: May 2024</p>
+								<div class="cert-card-details">
+									<p>U.S. Environmental Protection Agency [EPA]<br />Issued: May 2024</p>
+									<div class="cert-card-actions">
+										<a href="images/fulls/EPA.jpg" download class="button small icon solid fa-download">Download</a>
+									</div>
+								</div>
 							</article>
 							
 							<!-- Swift Water Rescue -->
@@ -99,10 +115,14 @@
 									<a href="images/fulls/SWR.jpg" class="image fit thumb" data-poptrox="ignore">
 										<img src="images/thumbs/SSI.jpg" alt="SWR" />
 									</a>
-									<li><a href="images/fulls/SWR.jpg" download class="button small icon solid fa-download">Download</a></li>
 								</div>
 								<h3 style="margin-bottom: 0.20em;">Swift Water Rescue</h3>
-								<p>Swiftwater Safety Institute [SSI]<br />Issued: April 2024 · Expires: April 2027</p>
+								<div class="cert-card-details">
+									<p>Swiftwater Safety Institute [SSI]<br />Issued: April 2024 · Expires: April 2027</p>
+									<div class="cert-card-actions">
+										<a href="images/fulls/SWR.jpg" download class="button small icon solid fa-download">Download</a>
+									</div>
+								</div>
 							</article>
 
 							<!-- PDIS Training Certifications -->
@@ -121,7 +141,9 @@
 									</a>
 								</div>
 								<h3 style="margin-bottom: 0.20em;">PDIS Training Certifications</h3>
-								<p>Colorado Professional Development Information System (PDIS)<br />Completed Professional Training Courses - completed 2024 - Standard Precautions and other one renewed 2026</p>
+								<div class="cert-card-details">
+									<p>Colorado Professional Development Information System (PDIS)<br />Completed Professional Training Courses - completed 2024 - Standard Precautions and other one renewed 2026</p>
+								</div>
 							</article>
 						</div>
 						
@@ -511,6 +533,76 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			</div>
 
 			<style>
+				#main {
+					padding-top: 3em;
+				}
+				#main #two > .row {
+					display: grid;
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					grid-auto-rows: 1fr;
+					width: calc(100% + 1em);
+					margin-left: -0.5em;
+					column-gap: 1.5em;
+					row-gap: 2em;
+				}
+				#main .cert-gallery {
+					box-sizing: border-box;
+					width: auto;
+					margin: 0;
+					padding: 1.25em;
+					display: flex;
+					flex-direction: column;
+					border: 1px solid #e5e5e5;
+					border-radius: 10px;
+					background: #fff;
+					box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+					transition: box-shadow 0.2s ease;
+				}
+				#main .cert-gallery:hover {
+					box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+				}
+				#main .cert-gallery .thumb-container {
+					margin: 0;
+				}
+				#main .cert-gallery .thumb-container .thumb {
+					margin-bottom: 1em;
+					overflow: hidden;
+				}
+				.cert-card-details {
+					display: flex;
+					align-items: center;
+					gap: 1em;
+					margin-top: auto;
+					padding-top: 0.25em;
+					border-top: 1px solid #f0f0f0;
+				}
+				#main .cert-gallery .cert-card-details p {
+					flex: 1;
+					min-width: 0;
+					margin: 0;
+				}
+				.cert-card-actions {
+					flex: 0 0 auto;
+				}
+				.cert-card-actions .button {
+					margin-bottom: 0;
+					min-width: 0;
+					padding-right: 0.6em;
+					padding-left: 0.6em;
+				}
+				@media screen and (max-width: 480px) {
+					#main #two > .row {
+						grid-template-columns: minmax(0, 1fr);
+						grid-auto-rows: auto;
+						gap: 2em 0;
+						width: 100%;
+						margin-left: 0;
+					}
+					#main .cert-gallery {
+						width: 100%;
+					}
+				}
+
 				/* Badge on the card thumbnail */
 				.thumb-container {
 					position: relative;
