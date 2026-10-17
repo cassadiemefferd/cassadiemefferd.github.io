@@ -7,34 +7,51 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<style>
-			/* Full-screen layout overrides */
 			#header {
-				display: none !important;
+				display: none;
 			}
 
 			#main {
-				margin-left: 0 !important;
-				width: 100% !important;
-				max-width: 100% !important;
-				padding: 3.5em 3.5em 2em 3.5em !important;
+				margin-left: 0;
+				max-width: 100%;
+				padding: 3.5em 3.5em 2em;
+				width: 100%;
 			}
 
 			#footer {
-				display: block !important;
-				position: relative !important;
-				width: 100% !important;
 				background-color: #1f1815;
-				text-align: center;
 				padding: 3em 1em;
+				position: relative;
+				text-align: center;
+				width: 100%;
 			}
 
 			#footer .icons a {
 				color: rgba(255, 255, 255, 0.5);
 			}
 
+			.sheet-container {
+				margin: 2em 0;
+				overflow: hidden;
+				width: 100%;
+			}
+
+			.sheet-container iframe {
+				border: 1px solid #e0e0e0;
+				display: block;
+				height: 80vh;
+				min-height: 600px;
+				width: 100%;
+			}
+
 			@media screen and (max-width: 736px) {
 				#main {
-					padding: 2em 1.5em !important;
+					padding: 2em 1.5em;
+				}
+
+				.sheet-container iframe {
+					height: 70vh;
+					min-height: 500px;
 				}
 			}
 		</style>
@@ -50,17 +67,16 @@
 					<section id="one">
 						<ul class="actions small">
 							<li><a href="index.html" class="button small icon solid fa-arrow-left">Back to Home</a></li>
-							<li><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false" target="_blank" rel="noopener noreferrer" class="button small icon solid fa-external-link-alt">Open Full Screen</a></li>
+							<li><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false&amp;chrome=false" target="_blank" rel="noopener noreferrer" class="button small icon solid fa-external-link-alt">Open Full Screen</a></li>
 						</ul>
 						<header class="major">
 							<h2>Outdoor Experience Log</h2>
 							<p>Spreadsheet documenting backcountry leadership, expedition days, and field experience.</p>
 						</header>
-						<div class="sheet-container" style="width: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); margin: 2em 0;">
-							<iframe 
-								src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false"
-								style="width: 100%; height: 80vh; min-height: 600px; border: 1px solid #e0e0e0; display: block;"
-								frameborder="0">
+						<div class="box sheet-container">
+							<iframe
+								src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false&amp;chrome=false"
+								title="Outdoor experience log spreadsheet">
 							</iframe>
 						</div>
 					</section>
