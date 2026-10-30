@@ -6,6 +6,42 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<style>
+			#header {
+				display: none !important;
+			}
+
+			#main {
+				margin-left: 0 !important;
+				width: 100% !important;
+				max-width: 100% !important;
+				padding: 3.5em 3.5em 2em 3.5em !important;
+			}
+
+			#main > section:not(:first-child) {
+				margin-top: 1.5em;
+				padding-top: 1.5em;
+			}
+
+			#footer {
+				display: block !important;
+				position: relative !important;
+				width: 100% !important;
+				background-color: #1f1815;
+				text-align: center;
+				padding: 3em 1em;
+			}
+
+			#footer .icons a {
+				color: rgba(255, 255, 255, 0.5);
+			}
+
+			@media screen and (max-width: 736px) {
+				#main {
+					padding: 2em 1.5em !important;
+				}
+			}
+		</style>
 	</head>
 	<body class="is-preload">
 
