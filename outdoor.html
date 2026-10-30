@@ -1,5 +1,4 @@
 <!DOCTYPE HTML>
-
 <html>
 	<head>
 		<title>Cassadie Mefferd - Outdoor Experience Log</title>
@@ -14,8 +13,9 @@
 			#main {
 				margin-left: 0;
 				max-width: 100%;
-				padding: 3.5em 3.5em 2em;
+				padding: 3em 3em 2em;
 				width: 100%;
+				position: relative;
 			}
 
 			#footer {
@@ -30,29 +30,348 @@
 				color: rgba(255, 255, 255, 0.5);
 			}
 
-			.sheet-container {
-				margin: 2em 0;
-				overflow: hidden;
+			/* Stage and layout */
+			.outdoor-stage {
+				position: relative;
 				width: 100%;
+				min-height: 860px;
+				margin: 1.5em 0 2.5em;
+				overflow: visible;
+			}
+
+			/* Centered spreadsheet with room on left and right */
+			.sheet-container {
+				margin: 0 auto;
+				width: 60%;
+				max-width: 980px;
+				min-width: 320px;
+				height: 88vh;
+				min-height: 840px;
+				background: #ffffff;
+				border-radius: 10px;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+				position: relative;
+				z-index: 5;
+				overflow: hidden;
+				border: 1px solid rgba(0, 0, 0, 0.08);
 			}
 
 			.sheet-container iframe {
-				border: 1px solid #e0e0e0;
+				border: 0;
 				display: block;
-				height: 80vh;
-				min-height: 600px;
+				height: 100%;
 				width: 100%;
 			}
 
-			@media screen and (max-width: 736px) {
-				#main {
-					padding: 2em 1.5em;
-				}
+			/* Drag shield over iframe during drag to prevent pointer capture issues */
+			.drag-shield {
+				display: none;
+				position: absolute;
+				inset: 0;
+				z-index: 25;
+				background: transparent;
+			}
 
-				.sheet-container iframe {
-					height: 70vh;
-					min-height: 500px;
+			body.is-dragging-active .drag-shield {
+				display: block;
+			}
+
+			body.is-dragging-active {
+				user-select: none;
+				-webkit-user-select: none;
+			}
+
+			/* Draggable photo items */
+			.draggable-photo {
+				position: absolute;
+				width: clamp(185px, 16vw, 240px);
+				cursor: grab;
+				touch-action: none;
+				user-select: none;
+				-webkit-user-select: none;
+				z-index: 10;
+				transform-origin: center center;
+				transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s ease;
+			}
+
+			.draggable-photo.dragging {
+				cursor: grabbing !important;
+				z-index: 200 !important;
+				transform: scale(1.08) rotate(0deg) !important;
+				box-shadow: 0 22px 50px rgba(0, 0, 0, 0.45) !important;
+				transition: none !important;
+			}
+
+			.draggable-photo .photo-inner {
+				position: relative;
+				border-radius: 8px;
+				overflow: hidden;
+				background: #ffffff;
+				box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+				line-height: 0;
+				border: 3px solid #ffffff;
+			}
+
+			.draggable-photo img {
+				width: 100%;
+				height: auto;
+				display: block;
+				pointer-events: none;
+				transition: filter 0.25s ease;
+			}
+
+			/* Hover State: Bring to front, grey out, show "View" */
+			.draggable-photo:hover {
+				z-index: 100 !important;
+				transform: scale(1.05) rotate(0deg);
+				box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+			}
+
+			.draggable-photo:hover img {
+				filter: grayscale(40%) brightness(0.6);
+			}
+
+			.draggable-photo .photo-overlay {
+				position: absolute;
+				inset: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.22s ease;
+				background: rgba(20, 20, 20, 0.35);
+			}
+
+			.draggable-photo:hover .photo-overlay {
+				opacity: 1;
+			}
+
+			.draggable-photo.dragging .photo-overlay {
+				opacity: 0 !important;
+			}
+
+			.draggable-photo.dragging img {
+				filter: none !important;
+			}
+
+			.photo-view-badge {
+				color: #ffffff;
+				font-size: 0.88em;
+				font-weight: 700;
+				letter-spacing: 0.14em;
+				text-transform: uppercase;
+				padding: 0.5em 1em;
+				border: 2px solid rgba(255, 255, 255, 0.95);
+				border-radius: 4px;
+				background: rgba(0, 0, 0, 0.6);
+				backdrop-filter: blur(4px);
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5em;
+				box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+			}
+
+			/* Photo Lightbox Modal */
+			.photo-lightbox {
+				position: fixed;
+				inset: 0;
+				z-index: 99999;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				opacity: 0;
+				visibility: hidden;
+				transition: opacity 0.25s ease, visibility 0.25s ease;
+			}
+
+			.photo-lightbox.is-open {
+				opacity: 1;
+				visibility: visible;
+			}
+
+			.lightbox-backdrop {
+				position: absolute;
+				inset: 0;
+				background: rgba(15, 12, 10, 0.92);
+				backdrop-filter: blur(8px);
+			}
+
+			.lightbox-container {
+				position: relative;
+				z-index: 2;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				width: 94vw;
+				height: 94vh;
+				max-width: 1400px;
+			}
+
+			.lightbox-main-view {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex: 1;
+				width: 100%;
+				max-height: calc(94vh - 130px);
+			}
+
+			.lightbox-main-view img {
+				max-height: 100%;
+				max-width: 100%;
+				object-fit: contain;
+				border-radius: 6px;
+				box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+				transition: transform 0.2s ease, opacity 0.2s ease;
+			}
+
+			.lightbox-close {
+				position: absolute;
+				top: 15px;
+				right: 20px;
+				background: rgba(255, 255, 255, 0.15);
+				border: none;
+				color: #ffffff;
+				font-size: 1.8em;
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: background 0.2s ease, transform 0.2s ease;
+				z-index: 10;
+				line-height: 1;
+			}
+
+			.lightbox-close:hover {
+				background: rgba(255, 255, 255, 0.35);
+				transform: scale(1.08);
+			}
+
+			.lightbox-nav {
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				background: rgba(255, 255, 255, 0.15);
+				border: none;
+				color: #ffffff;
+				font-size: 1.4em;
+				width: 52px;
+				height: 52px;
+				border-radius: 50%;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: background 0.2s ease, transform 0.2s ease;
+				z-index: 10;
+			}
+
+			.lightbox-nav:hover {
+				background: rgba(255, 255, 255, 0.35);
+				transform: translateY(-50%) scale(1.08);
+			}
+
+			.lightbox-prev {
+				left: 20px;
+			}
+
+			.lightbox-next {
+				right: 20px;
+			}
+
+			.lightbox-info {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 100%;
+				max-width: 800px;
+				color: rgba(255, 255, 255, 0.85);
+				margin-top: 10px;
+				font-size: 0.9em;
+			}
+
+			.lightbox-hint {
+				font-size: 0.85em;
+				color: rgba(255, 255, 255, 0.6);
+			}
+
+			.lightbox-thumbs {
+				display: flex;
+				gap: 12px;
+				overflow-x: auto;
+				padding: 10px 0;
+				max-width: 100%;
+				scrollbar-width: thin;
+			}
+
+			.lightbox-thumb-item {
+				flex: 0 0 68px;
+				height: 85px;
+				border-radius: 4px;
+				overflow: hidden;
+				cursor: pointer;
+				opacity: 0.5;
+				border: 2px solid transparent;
+				transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+			}
+
+			.lightbox-thumb-item:hover {
+				opacity: 0.85;
+				transform: translateY(-2px);
+			}
+
+			.lightbox-thumb-item.active {
+				opacity: 1;
+				border-color: #f2849e;
+				transform: scale(1.06);
+			}
+
+			.lightbox-thumb-item img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+			}
+
+			/* Responsive tweaks */
+			@media screen and (max-width: 1100px) {
+				.sheet-container {
+					width: 66%;
 				}
+				.draggable-photo {
+					width: clamp(160px, 18vw, 210px);
+				}
+			}
+
+			@media screen and (max-width: 768px) {
+				#main {
+					padding: 2em 1em;
+				}
+				.outdoor-stage {
+					min-height: 760px;
+				}
+				.sheet-container {
+					width: 94%;
+					height: 75vh;
+					min-height: 560px;
+				}
+				.draggable-photo {
+					width: 160px;
+				}
+				.lightbox-nav {
+					width: 42px;
+					height: 42px;
+					font-size: 1.1em;
+				}
+				.lightbox-prev { left: 5px; }
+				.lightbox-next { right: 5px; }
+				.lightbox-hint { display: none; }
 			}
 		</style>
 	</head>
@@ -61,357 +380,78 @@
 		<!-- Main -->
 			<div id="main">
 
-				
-
 				<!-- One: Outdoor Experience Log -->
 					<section id="one">
 						<ul class="actions small">
 							<li><a href="index.html" class="button small icon solid fa-arrow-left">Back to Home</a></li>
 							<li><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false&amp;chrome=false" target="_blank" rel="noopener noreferrer" class="button small icon solid fa-external-link-alt">Open Full Screen</a></li>
+							<li><button id="btn-reset-photos" class="button small icon solid fa-undo" type="button">Reset Photos</button></li>
 						</ul>
 						<header class="major">
 							<h2>Outdoor Experience Log</h2>
-							<p>Spreadsheet documenting backcountry leadership, expedition days, and field experience.</p>
+							<p>Spreadsheet documenting backcountry leadership, expedition days, and field experience. Drag and arrange photos anywhere around the page.</p>
 						</header>
-						<div class="box sheet-container">
-							<iframe
-								src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false&amp;chrome=false"
-								title="Outdoor experience log spreadsheet">
-							</iframe>
+
+						<!-- Outdoor Stage: Centered full-length spreadsheet with draggable photos around it -->
+						<div class="outdoor-stage" id="outdoorStage">
+
+							<!-- Centered Spreadsheet -->
+							<div class="box sheet-container">
+								<div class="drag-shield"></div>
+								<iframe
+									src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false&amp;chrome=false"
+									title="Outdoor experience log spreadsheet">
+								</iframe>
+							</div>
+
+							<!-- Draggable Photos -->
+							<div class="draggable-photo" data-id="1" data-index="0" title="Click to view full photo">
+								<div class="photo-inner">
+									<img src="images/fulls/outdoor_note_1.png" alt="Camper debrief note 1" draggable="false" />
+									<div class="photo-overlay">
+										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="draggable-photo" data-id="2" data-index="1" title="Click to view full photo">
+								<div class="photo-inner">
+									<img src="images/fulls/outdoor_note_2.png" alt="Camper debrief note 2" draggable="false" />
+									<div class="photo-overlay">
+										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="draggable-photo" data-id="3" data-index="2" title="Click to view full photo">
+								<div class="photo-inner">
+									<img src="images/fulls/outdoor_note_3.png" alt="Camper debrief note 3" draggable="false" />
+									<div class="photo-overlay">
+										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="draggable-photo" data-id="4" data-index="3" title="Click to view full photo">
+								<div class="photo-inner">
+									<img src="images/fulls/outdoor_note_4.png" alt="Camper debrief note 4" draggable="false" />
+									<div class="photo-overlay">
+										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="draggable-photo" data-id="5" data-index="4" title="Click to view full photo">
+								<div class="photo-inner">
+									<img src="images/fulls/outdoor_note_5.png" alt="Camper debrief note 5" draggable="false" />
+									<div class="photo-overlay">
+										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
+									</div>
+								</div>
+							</div>
+
 						</div>
 					</section>
-
-				<!-- Two: Gallery (commented out until you add outdoor photos/projects)
-					<section id="two">
-						<div class="row">
-                            <article class="col-6 col-12-xsmall work-item">
-								<a href="images/fulls/01.jpg" class="image fit thumb"><img src="images/thumbs/01.jpg" alt="" /></a>
-								<h3>Trip Highlights</h3>
-								<p>Description.</p>
-							</article>
-						</div>
-					</section>
-				-->
-
-				
-
-				<!-- Four -->
-				<!--
-					<section id="four">
-						<h2>Elements</h2>
-
-						<section>
-							<h4>Text</h4>
-							<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-							This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-							This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-							<hr />
-							<header>
-								<h4>Heading with a Subtitle</h4>
-								<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
-							</header>
-							<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
-							<header>
-								<h5>Heading with a Subtitle</h5>
-								<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
-							</header>
-							<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
-							<hr />
-							<h2>Heading Level 2</h2>
-							<h3>Heading Level 3</h3>
-							<h4>Heading Level 4</h4>
-							<h5>Heading Level 5</h5>
-							<h6>Heading Level 6</h6>
-							<hr />
-							<h5>Blockquote</h5>
-							<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-							<h5>Preformatted</h5>
-							<pre><code>i = 0;
-
-while (!deck.isInOrder()) {
-print 'Iteration ' + i;
-deck.shuffle();
-i++;
-}
-
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-						</section>
-
-						<section>
-							<h4>Lists</h4>
-							<div class="row">
-								<div class="col-6 col-12-xsmall">
-									<h5>Unordered</h5>
-									<ul>
-										<li>Dolor pulvinar etiam magna etiam.</li>
-										<li>Sagittis adipiscing lorem eleifend.</li>
-										<li>Felis enim feugiat dolore viverra.</li>
-									</ul>
-									<h5>Alternate</h5>
-									<ul class="alt">
-										<li>Dolor pulvinar etiam magna etiam.</li>
-										<li>Sagittis adipiscing lorem eleifend.</li>
-										<li>Felis enim feugiat dolore viverra.</li>
-									</ul>
-								</div>
-								<div class="col-6 col-12-xsmall">
-									<h5>Ordered</h5>
-									<ol>
-										<li>Dolor pulvinar etiam magna etiam.</li>
-										<li>Etiam vel felis at lorem sed viverra.</li>
-										<li>Felis enim feugiat dolore viverra.</li>
-										<li>Dolor pulvinar etiam magna etiam.</li>
-										<li>Etiam vel felis at lorem sed viverra.</li>
-										<li>Felis enim feugiat dolore viverra.</li>
-									</ol>
-									<h5>Icons</h5>
-									<ul class="icons">
-										<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-										<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-										<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-										<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-										<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-										<li><a href="#" class="icon brands fa-tumblr"><span class="label">Tumblr</span></a></li>
-									</ul>
-								</div>
-							</div>
-							<h5>Actions</h5>
-							<ul class="actions">
-								<li><a href="#" class="button primary">Default</a></li>
-								<li><a href="#" class="button">Default</a></li>
-							</ul>
-							<ul class="actions small">
-								<li><a href="#" class="button primary small">Small</a></li>
-								<li><a href="#" class="button small">Small</a></li>
-							</ul>
-							<div class="row">
-								<div class="col-6 col-12-small">
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary">Default</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-								</div>
-								<div class="col-6 col-12-small">
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary small">Small</a></li>
-										<li><a href="#" class="button small">Small</a></li>
-									</ul>
-								</div>
-								<div class="col-6 col-12-small">
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary fit">Default</a></li>
-										<li><a href="#" class="button fit">Default</a></li>
-									</ul>
-								</div>
-								<div class="col-6 col-12-small">
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary small fit">Small</a></li>
-										<li><a href="#" class="button small fit">Small</a></li>
-									</ul>
-								</div>
-							</div>
-						</section>
-
-						<section>
-							<h4>Table</h4>
-							<h5>Default</h5>
-							<div class="table-wrapper">
-								<table>
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Description</th>
-											<th>Price</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Item One</td>
-											<td>Ante turpis integer aliquet porttitor.</td>
-											<td>29.99</td>
-										</tr>
-										<tr>
-											<td>Item Two</td>
-											<td>Vis ac commodo adipiscing arcu aliquet.</td>
-											<td>19.99</td>
-										</tr>
-										<tr>
-											<td>Item Three</td>
-											<td> Morbi faucibus arcu accumsan lorem.</td>
-											<td>29.99</td>
-										</tr>
-										<tr>
-											<td>Item Four</td>
-											<td>Vitae integer tempus condimentum.</td>
-											<td>19.99</td>
-										</tr>
-										<tr>
-											<td>Item Five</td>
-											<td>Ante turpis integer aliquet porttitor.</td>
-											<td>29.99</td>
-										</tr>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="2"></td>
-											<td>100.00</td>
-										</tr>
-									</tfoot>
-								</table>
-							</div>
-
-							<h5>Alternate</h5>
-							<div class="table-wrapper">
-								<table class="alt">
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Description</th>
-											<th>Price</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Item One</td>
-											<td>Ante turpis integer aliquet porttitor.</td>
-											<td>29.99</td>
-										</tr>
-										<tr>
-											<td>Item Two</td>
-											<td>Vis ac commodo adipiscing arcu aliquet.</td>
-											<td>19.99</td>
-										</tr>
-										<tr>
-											<td>Item Three</td>
-											<td> Morbi faucibus arcu accumsan lorem.</td>
-											<td>29.99</td>
-										</tr>
-										<tr>
-											<td>Item Four</td>
-											<td>Vitae integer tempus condimentum.</td>
-											<td>19.99</td>
-										</tr>
-										<tr>
-											<td>Item Five</td>
-											<td>Ante turpis integer aliquet porttitor.</td>
-											<td>29.99</td>
-										</tr>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="2"></td>
-											<td>100.00</td>
-										</tr>
-									</tfoot>
-								</table>
-							</div>
-						</section>
-
-						<section>
-							<h4>Buttons</h4>
-							<ul class="actions">
-								<li><a href="#" class="button primary">Primary</a></li>
-								<li><a href="#" class="button">Default</a></li>
-							</ul>
-							<ul class="actions">
-								<li><a href="#" class="button large">Large</a></li>
-								<li><a href="#" class="button">Default</a></li>
-								<li><a href="#" class="button small">Small</a></li>
-							</ul>
-							<ul class="actions fit">
-								<li><a href="#" class="button primary fit">Fit</a></li>
-								<li><a href="#" class="button fit">Fit</a></li>
-							</ul>
-							<ul class="actions fit small">
-								<li><a href="#" class="button primary fit small">Fit + Small</a></li>
-								<li><a href="#" class="button fit small">Fit + Small</a></li>
-							</ul>
-							<ul class="actions">
-								<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
-								<li><a href="#" class="button icon solid fa-download">Icon</a></li>
-							</ul>
-							<ul class="actions">
-								<li><span class="button primary disabled">Primary</span></li>
-								<li><span class="button disabled">Default</span></li>
-							</ul>
-						</section>
-
-						<section>
-							<h4>Form</h4>
-							<form method="post" action="#">
-								<div class="row gtr-uniform gtr-50">
-									<div class="col-6 col-12-xsmall">
-										<input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
-									</div>
-									<div class="col-6 col-12-xsmall">
-										<input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
-									</div>
-									<div class="col-12">
-										<select name="demo-category" id="demo-category">
-											<option value="">- Category -</option>
-											<option value="1">Manufacturing</option>
-											<option value="1">Shipping</option>
-											<option value="1">Administration</option>
-											<option value="1">Human Resources</option>
-										</select>
-									</div>
-									<div class="col-4 col-12-small">
-										<input type="radio" id="demo-priority-low" name="demo-priority" checked>
-										<label for="demo-priority-low">Low Priority</label>
-									</div>
-									<div class="col-4 col-12-small">
-										<input type="radio" id="demo-priority-normal" name="demo-priority">
-										<label for="demo-priority-normal">Normal Priority</label>
-									</div>
-									<div class="col-4 col-12-small">
-										<input type="radio" id="demo-priority-high" name="demo-priority">
-										<label for="demo-priority-high">High Priority</label>
-									</div>
-									<div class="col-6 col-12-small">
-										<input type="checkbox" id="demo-copy" name="demo-copy">
-										<label for="demo-copy">Email me a copy of this message</label>
-									</div>
-									<div class="col-6 col-12-small">
-										<input type="checkbox" id="demo-human" name="demo-human" checked>
-										<label for="demo-human">I am a human and not a robot</label>
-									</div>
-									<div class="col-12">
-										<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
-									</div>
-									<div class="col-12">
-										<ul class="actions">
-											<li><input type="submit" value="Send Message" class="primary" /></li>
-											<li><input type="reset" value="Reset" /></li>
-										</ul>
-									</div>
-								</div>
-							</form>
-						</section>
-
-						<section>
-							<h4>Image</h4>
-							<h5>Fit</h5>
-							<div class="box alt">
-								<div class="row gtr-50 gtr-uniform">
-									<div class="col-12"><span class="image fit"><img src="images/fulls/05.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/01.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/02.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/03.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/04.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/05.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/06.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/03.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/02.jpg" alt="" /></span></div>
-									<div class="col-4"><span class="image fit"><img src="images/thumbs/01.jpg" alt="" /></span></div>
-								</div>
-							</div>
-							<h5>Left &amp; Right</h5>
-							<p><span class="image left"><img src="images/avatar.jpg" alt="" /></span>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-							<p><span class="image right"><img src="images/avatar.jpg" alt="" /></span>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-						</section>
-
-					</section>
-				-->
 
 			</div>
 
@@ -429,30 +469,343 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 				</div>
 			</footer>
 
+		<!-- Full-screen Lightbox Gallery Modal -->
+			<div class="photo-lightbox" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Outdoor photo viewer">
+				<div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+				<div class="lightbox-container">
+					<button class="lightbox-close" id="lightboxClose" aria-label="Close viewer">&times;</button>
+					<button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous photo"><i class="fas fa-chevron-left"></i></button>
+					<div class="lightbox-main-view">
+						<img id="lightboxImage" src="" alt="Outdoor note full view" />
+					</div>
+					<button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next photo"><i class="fas fa-chevron-right"></i></button>
+					<div class="lightbox-info">
+						<span class="lightbox-counter"><span id="lightboxCurrentIdx">1</span> of <span id="lightboxTotalCount">5</span></span>
+						<span class="lightbox-hint"><i class="fas fa-mouse"></i> Scroll mouse wheel or use arrow keys to navigate</span>
+					</div>
+					<div class="lightbox-thumbs" id="lightboxThumbs"></div>
+				</div>
+			</div>
+
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
-            <script src="assets/js/jquery.poptrox.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 
 			<script>
-                $(window).on('load', function() {
-                    $('#gallery').poptrox({
-                        caption: function($a) { return $a.next('h3').text(); },
-                        overlayColor: '#2c2c2c',
-                        overlayOpacity: 0.85,
-                        popupCloserText: '',
-                        popupLoaderText: '',
-                        selector: '.work-item a.image',
-                        usePopupCaption: true,
-                        usePopupDefaultStyling: false,
-                        usePopupEasyClose: false,
-                        usePopupNav: true,
-                        windowMargin: (breakpoints.active('<=small') ? 0 : 50)
-                    });
-                });
-            </script>
+				(function() {
+					// Photo configuration
+					const photos = [
+						{ id: "1", src: "images/fulls/outdoor_note_1.png", alt: "Camper Note 1", defaultPos: { side: "left", offset: 18, top: 40, rotate: -3.5 } },
+						{ id: "2", src: "images/fulls/outdoor_note_2.png", alt: "Camper Note 2", defaultPos: { side: "left", offset: 32, top: 460, rotate: 2.5 } },
+						{ id: "3", src: "images/fulls/outdoor_note_3.png", alt: "Camper Note 3", defaultPos: { side: "right", offset: 20, top: 30, rotate: 3 } },
+						{ id: "4", src: "images/fulls/outdoor_note_4.png", alt: "Camper Note 4", defaultPos: { side: "right", offset: 38, top: 360, rotate: -2.5 } },
+						{ id: "5", src: "images/fulls/outdoor_note_5.png", alt: "Camper Note 5", defaultPos: { side: "right", offset: 18, top: 680, rotate: 2 } }
+					];
+
+					const stage = document.getElementById('outdoorStage');
+					const photoElements = document.querySelectorAll('.draggable-photo');
+					const STORAGE_KEY = 'outdoor_photos_positions_v2';
+					let highestZIndex = 15;
+
+					// Position setup
+					function applyDefaultPositions() {
+						const stageRect = stage.getBoundingClientRect();
+						photoElements.forEach((el, index) => {
+							const cfg = photos[index];
+							const photoWidth = el.offsetWidth || 210;
+							let leftPx = 0;
+							if (cfg.defaultPos.side === "left") {
+								leftPx = cfg.defaultPos.offset;
+							} else {
+								leftPx = Math.max(0, stageRect.width - photoWidth - cfg.defaultPos.offset);
+							}
+							el.style.left = leftPx + 'px';
+							el.style.top = cfg.defaultPos.top + 'px';
+							el.style.transform = `rotate(${cfg.defaultPos.rotate}deg)`;
+							el.style.zIndex = 10 + index;
+						});
+					}
+
+					function loadSavedPositions() {
+						try {
+							const saved = localStorage.getItem(STORAGE_KEY);
+							if (!saved) return false;
+							const parsed = JSON.parse(saved);
+							if (!parsed || typeof parsed !== 'object') return false;
+
+							photoElements.forEach((el) => {
+								const id = el.dataset.id;
+								if (parsed[id]) {
+									el.style.left = parsed[id].left;
+									el.style.top = parsed[id].top;
+									if (parsed[id].zIndex) {
+										el.style.zIndex = parsed[id].zIndex;
+										if (parseInt(parsed[id].zIndex, 10) > highestZIndex) {
+											highestZIndex = parseInt(parsed[id].zIndex, 10);
+										}
+									}
+									if (parsed[id].rotate !== undefined) {
+										el.style.transform = `rotate(${parsed[id].rotate}deg)`;
+									}
+								}
+							});
+							return true;
+						} catch (e) {
+							console.error('Failed to parse saved positions:', e);
+							return false;
+						}
+					}
+
+					function savePositions() {
+						const data = {};
+						photoElements.forEach((el, index) => {
+							const id = el.dataset.id;
+							const cfg = photos[index];
+							data[id] = {
+								left: el.style.left,
+								top: el.style.top,
+								zIndex: el.style.zIndex || (10 + index),
+								rotate: cfg.defaultPos.rotate
+							};
+						});
+						localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+					}
+
+					// Drag and Drop
+					photoElements.forEach((el, index) => {
+						let startX = 0;
+						let startY = 0;
+						let initialLeft = 0;
+						let initialTop = 0;
+						let isDragging = false;
+						let hasMoved = false;
+
+						el.addEventListener('pointerdown', (e) => {
+							// Only react to primary mouse button or touch
+							if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+							el.setPointerCapture(e.pointerId);
+							startX = e.clientX;
+							startY = e.clientY;
+							initialLeft = parseFloat(el.style.left) || el.offsetLeft;
+							initialTop = parseFloat(el.style.top) || el.offsetTop;
+							isDragging = true;
+							hasMoved = false;
+
+							highestZIndex += 2;
+							el.style.zIndex = highestZIndex;
+						});
+
+						el.addEventListener('pointermove', (e) => {
+							if (!isDragging) return;
+
+							const dx = e.clientX - startX;
+							const dy = e.clientY - startY;
+
+							if (!hasMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+								hasMoved = true;
+								document.body.classList.add('is-dragging-active');
+								el.classList.add('dragging');
+							}
+
+							if (hasMoved) {
+								const stageRect = stage.getBoundingClientRect();
+								const elWidth = el.offsetWidth || 210;
+								let newLeft = initialLeft + dx;
+								let newTop = initialTop + dy;
+
+								// Keep at least part of the photo visible in the stage
+								newLeft = Math.max(-40, Math.min(newLeft, stageRect.width - elWidth + 40));
+								newTop = Math.max(-20, Math.min(newTop, stage.offsetHeight - 60));
+
+								el.style.left = newLeft + 'px';
+								el.style.top = newTop + 'px';
+							}
+						});
+
+						const handlePointerUp = (e) => {
+							if (!isDragging) return;
+							isDragging = false;
+
+							try {
+								el.releasePointerCapture(e.pointerId);
+							} catch (err) {}
+
+							if (hasMoved) {
+								document.body.classList.remove('is-dragging-active');
+								el.classList.remove('dragging');
+								savePositions();
+							} else {
+								// Registered as a pure click -> open lightbox!
+								openLightbox(index);
+							}
+						};
+
+						el.addEventListener('pointerup', handlePointerUp);
+						el.addEventListener('pointercancel', handlePointerUp);
+					});
+
+					// Reset layout button
+					const resetBtn = document.getElementById('btn-reset-photos');
+					if (resetBtn) {
+						resetBtn.addEventListener('click', () => {
+							localStorage.removeItem(STORAGE_KEY);
+							applyDefaultPositions();
+						});
+					}
+
+					// Lightbox Viewer
+					const lightbox = document.getElementById('photoLightbox');
+					const lightboxImg = document.getElementById('lightboxImage');
+					const currentIdxSpan = document.getElementById('lightboxCurrentIdx');
+					const totalCountSpan = document.getElementById('lightboxTotalCount');
+					const thumbsContainer = document.getElementById('lightboxThumbs');
+					const prevBtn = document.getElementById('lightboxPrev');
+					const nextBtn = document.getElementById('lightboxNext');
+					const closeBtn = document.getElementById('lightboxClose');
+					const backdrop = document.getElementById('lightboxBackdrop');
+
+					let currentPhotoIndex = 0;
+					totalCountSpan.textContent = photos.length;
+
+					// Build thumbnails
+					photos.forEach((item, idx) => {
+						const thumb = document.createElement('div');
+						thumb.className = 'lightbox-thumb-item' + (idx === 0 ? ' active' : '');
+						thumb.innerHTML = `<img src="${item.src}" alt="${item.alt}" />`;
+						thumb.addEventListener('click', () => {
+							showPhoto(idx);
+						});
+						thumbsContainer.appendChild(thumb);
+					});
+
+					function showPhoto(idx) {
+						if (idx < 0) idx = photos.length - 1;
+						if (idx >= photos.length) idx = 0;
+						currentPhotoIndex = idx;
+
+						lightboxImg.style.opacity = '0';
+						lightboxImg.style.transform = 'scale(0.96)';
+
+						setTimeout(() => {
+							lightboxImg.src = photos[currentPhotoIndex].src;
+							lightboxImg.alt = photos[currentPhotoIndex].alt;
+							currentIdxSpan.textContent = currentPhotoIndex + 1;
+
+							// Update thumb active state
+							const thumbItems = thumbsContainer.querySelectorAll('.lightbox-thumb-item');
+							thumbItems.forEach((t, i) => {
+								t.classList.toggle('active', i === currentPhotoIndex);
+								if (i === currentPhotoIndex) {
+									t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+								}
+							});
+
+							lightboxImg.style.opacity = '1';
+							lightboxImg.style.transform = 'scale(1)';
+						}, 120);
+					}
+
+					function openLightbox(idx) {
+						showPhoto(idx);
+						lightbox.classList.add('is-open');
+						document.body.style.overflow = 'hidden';
+					}
+
+					function closeLightbox() {
+						lightbox.classList.remove('is-open');
+						document.body.style.overflow = '';
+					}
+
+					prevBtn.addEventListener('click', (e) => {
+						e.stopPropagation();
+						showPhoto(currentPhotoIndex - 1);
+					});
+
+					nextBtn.addEventListener('click', (e) => {
+						e.stopPropagation();
+						showPhoto(currentPhotoIndex + 1);
+					});
+
+					closeBtn.addEventListener('click', closeLightbox);
+					backdrop.addEventListener('click', closeLightbox);
+
+					// Keyboard navigation
+					window.addEventListener('keydown', (e) => {
+						if (!lightbox.classList.contains('is-open')) return;
+						if (e.key === 'Escape') {
+							closeLightbox();
+						} else if (e.key === 'ArrowLeft') {
+							showPhoto(currentPhotoIndex - 1);
+						} else if (e.key === 'ArrowRight') {
+							showPhoto(currentPhotoIndex + 1);
+						}
+					});
+
+					// Mouse wheel scroll to cycle photos ("scroll through all of them")
+					let wheelLock = false;
+					lightbox.addEventListener('wheel', (e) => {
+						e.preventDefault();
+						if (wheelLock) return;
+						const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+						if (delta > 25) {
+							wheelLock = true;
+							showPhoto(currentPhotoIndex + 1);
+							setTimeout(() => { wheelLock = false; }, 260);
+						} else if (delta < -25) {
+							wheelLock = true;
+							showPhoto(currentPhotoIndex - 1);
+							setTimeout(() => { wheelLock = false; }, 260);
+						}
+					}, { passive: false });
+
+					// Touch swipe support for mobile
+					let touchStartX = 0;
+					let touchStartY = 0;
+					lightbox.addEventListener('touchstart', (e) => {
+						touchStartX = e.changedTouches[0].screenX;
+						touchStartY = e.changedTouches[0].screenY;
+					}, { passive: true });
+
+					lightbox.addEventListener('touchend', (e) => {
+						const touchEndX = e.changedTouches[0].screenX;
+						const touchEndY = e.changedTouches[0].screenY;
+						const dx = touchEndX - touchStartX;
+						const dy = touchEndY - touchStartY;
+						if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+							if (dx < 0) {
+								showPhoto(currentPhotoIndex + 1);
+							} else {
+								showPhoto(currentPhotoIndex - 1);
+							}
+						}
+					}, { passive: true });
+
+					// Window load & resize handling
+					window.addEventListener('DOMContentLoaded', () => {
+						if (!loadSavedPositions()) {
+							applyDefaultPositions();
+						}
+					});
+
+					// On window load (images loaded), verify positioning
+					window.addEventListener('load', () => {
+						if (!loadSavedPositions()) {
+							applyDefaultPositions();
+						}
+					});
+
+					window.addEventListener('resize', () => {
+						// Only re-apply defaults if no custom positions were saved
+						if (!localStorage.getItem(STORAGE_KEY)) {
+							applyDefaultPositions();
+						}
+					});
+
+				})();
+			</script>
 	</body>
 </html>
