@@ -375,7 +375,6 @@
 						<ul class="actions small">
 							<li><a href="index.html" class="button small icon solid fa-arrow-left">Back to Home</a></li>
 							<li><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQHbl90SD-i834wpi5OTrbLuFCWw44EihS2E0cPLT2VCt0_ZwZCtmmT0J3hISvl4zVJpH9veqEkVHWW/pubhtml?widget=true&amp;headers=false&amp;chrome=false" target="_blank" rel="noopener noreferrer" class="button small icon solid fa-external-link-alt">Open Full Screen</a></li>
-							<li><button id="btn-reset-photos" class="button small icon solid fa-undo" type="button">Reset Photos</button></li>
 						</ul>
 						<header class="major">
 							<h2>Outdoor Experience Log</h2>
@@ -622,15 +621,6 @@
 						el.addEventListener('pointerup', handlePointerUp);
 						el.addEventListener('pointercancel', handlePointerUp);
 					});
-
-					// Reset layout button
-					const resetBtn = document.getElementById('btn-reset-photos');
-					if (resetBtn) {
-						resetBtn.addEventListener('click', () => {
-							localStorage.removeItem(STORAGE_KEY);
-							applyDefaultPositions();
-						});
-					}
 
 					// Lightbox Viewer
 					const lightbox = document.getElementById('photoLightbox');
