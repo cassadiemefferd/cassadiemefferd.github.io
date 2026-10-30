@@ -63,16 +63,70 @@
 				width: 100%;
 			}
 
+			.drag-shield {
+				display: none;
+				position: absolute;
+				inset: 0;
+				z-index: 25;
+				background: transparent;
+			}
+
+			body.is-dragging-active .drag-shield {
+				display: block;
+			}
+
+			body.is-dragging-active {
+				user-select: none;
+				-webkit-user-select: none;
+			}
+
 			/* Photo items */
 			.draggable-photo {
 				position: absolute;
 				width: clamp(185px, 16vw, 240px);
-				cursor: pointer;
+				cursor: grab;
+				touch-action: none;
 				user-select: none;
 				-webkit-user-select: none;
 				z-index: 10;
 				transform-origin: center center;
 				transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s ease;
+			}
+
+			.photo-resize-handle {
+				position: absolute;
+				right: -9px;
+				bottom: -9px;
+				z-index: 2;
+				width: 28px;
+				height: 28px;
+				padding: 0;
+				border: 2px solid #ffffff;
+				border-radius: 50%;
+				background: #1f1815;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+				cursor: nwse-resize;
+				touch-action: none;
+			}
+
+			.photo-resize-handle:before {
+				content: '';
+				position: absolute;
+				inset: 7px;
+				border-right: 2px solid #ffffff;
+				border-bottom: 2px solid #ffffff;
+			}
+
+			.photo-resize-handle:focus-visible {
+				outline: 3px solid #49bf9d;
+				outline-offset: 2px;
+			}
+
+			.draggable-photo.dragging {
+				cursor: grabbing !important;
+				z-index: 200 !important;
+				transform: scale(1.08) rotate(0deg) !important;
+				box-shadow: 0 22px 50px rgba(0, 0, 0, 0.45) !important;
 			}
 
 			.draggable-photo .image.thumb {
@@ -346,6 +400,7 @@
 									title="Outdoor experience log spreadsheet">
 								</iframe>
 							</div>
+							<div class="drag-shield" aria-hidden="true"></div>
 							<!-- Draggable Photos -->
 							<div class="draggable-photo" data-id="1" data-index="0" title="Click to view full photo">
 								<div class="image fit thumb">
@@ -397,7 +452,7 @@
 
 							<div class="draggable-photo" data-id="9" data-index="8" title="Click to view full photo">
 								<div class="image fit thumb">
-									<img src="images/thumbs/IMG_0534.jpg" alt="Hikers reviewing a trail map among granite boulders" draggable="false" loading="eager" />
+									<img src="images/thumbs/IMG_0534.jpg" alt="Hikers reviewing a trail map among granite boulders" draggable="false" loading="lazy" />
 								</div>
 							</div>
 
@@ -439,7 +494,7 @@
 
 							<div class="draggable-photo" data-id="16" data-index="15" title="Click to view full photo">
 								<div class="image fit thumb">
-									<img src="images/thumbs/IMG_8314.jpg" alt="Backpacking group crossing an alpine trail" draggable="false" loading="eager" />
+									<img src="images/thumbs/IMG_8314.jpg" alt="Backpacking group crossing an alpine trail" draggable="false" loading="lazy" />
 								</div>
 							</div>
 
@@ -491,62 +546,222 @@
 				(function() {
 					// Photo configuration
 					const photos = [
-						{ id: "1", src: "images/fulls/Screenshot 2026-10-29 at 7.54.19 PM.png", alt: "Camper Note 1", defaultPos: { left: -37, top: 690, width: 270, zIndex: 16, rotate: -3.5 } },
-						{ id: "2", src: "images/fulls/Screenshot 2026-10-29 at 7.54.47 PM.png", alt: "Camper Note 2", defaultPos: { left: 977, top: 804, width: 270, zIndex: 30, rotate: 2.5 } },
+						{ id: "1", src: "images/fulls/Screenshot 2026-10-29 at 7.54.19 PM.png", alt: "Camper Note 1", defaultPos: { side: "left", offset: 18, top: 40, rotate: -3.5 } },
+						{ id: "2", src: "images/fulls/Screenshot 2026-10-29 at 7.54.47 PM.png", alt: "Camper Note 2", defaultPos: { side: "left", offset: 32, top: 460, rotate: 2.5 } },
 						{ id: "3", src: "images/fulls/Screenshot 2026-10-29 at 7.55.00 PM.png", alt: "Camper Note 3", defaultPos: { side: "right", offset: 20, top: 30, rotate: 3 } },
 						{ id: "4", src: "images/fulls/Screenshot 2026-10-29 at 7.55.06 PM.png", alt: "Camper Note 4", defaultPos: { side: "right", offset: 38, top: 360, rotate: -2.5 } },
 						{ id: "5", src: "images/fulls/Screenshot 2026-10-29 at 7.55.19 PM.png", alt: "Camper Note 5", defaultPos: { side: "right", offset: 18, top: 680, rotate: 2 } },
-						{ id: "6", src: "images/fulls/IMG_0170.JPG", thumb: "images/thumbs/IMG_0170.jpg", alt: "Writing in a field notebook beside an alpine lake", defaultPos: { left: 450, top: 1116, width: 170, zIndex: 19, rotate: -2.5 } },
-						{ id: "7", src: "images/fulls/IMG_0462.JPG", thumb: "images/thumbs/IMG_0462.jpg", alt: "Sunset reflecting across a mountain lake", defaultPos: { left: 66, top: 864, width: 372, zIndex: 22, rotate: 2.5 } },
-						{ id: "8", src: "images/fulls/IMG_0475.JPG", thumb: "images/thumbs/IMG_0475.jpg", alt: "Backpacking group gathered by an alpine lake at sunset", defaultPos: { left: 22, top: 1072, width: 365, zIndex: 20, rotate: 2 } },
-						{ id: "9", src: "images/fulls/IMG_0534.JPG", thumb: "images/thumbs/IMG_0534.jpg", alt: "Hikers reviewing a trail map among granite boulders", defaultPos: { left: 1194, top: 374, width: 245, zIndex: 17, rotate: -2 } },
-						{ id: "10", src: "images/fulls/IMG_0613.JPG", thumb: "images/thumbs/IMG_0613.jpg", alt: "Outdoor group taking a break beside a mountain lake", defaultPos: { left: 1022, top: 1106, width: 360, zIndex: 25, rotate: -3 } },
-						{ id: "11", src: "images/fulls/IMG_0643.JPG", thumb: "images/thumbs/IMG_0643.jpg", alt: "Identifying wildflowers with a field guide", defaultPos: { left: 686, top: 1119, width: 205, zIndex: 21, rotate: 3 } },
+						{ id: "6", src: "images/fulls/IMG_0170.JPG", thumb: "images/thumbs/IMG_0170.jpg", alt: "Writing in a field notebook beside an alpine lake", defaultPos: { side: "left", offset: 30, top: 820, rotate: -2.5 } },
+						{ id: "7", src: "images/fulls/IMG_0462.JPG", thumb: "images/thumbs/IMG_0462.jpg", alt: "Sunset reflecting across a mountain lake", defaultPos: { side: "right", offset: 24, top: 850, rotate: 2.5 } },
+						{ id: "8", src: "images/fulls/IMG_0475.JPG", thumb: "images/thumbs/IMG_0475.jpg", alt: "Backpacking group gathered by an alpine lake at sunset", defaultPos: { side: "left", offset: 42, top: 1220, rotate: 2 } },
+						{ id: "9", src: "images/fulls/IMG_0534.JPG", thumb: "images/thumbs/IMG_0534.jpg", alt: "Hikers reviewing a trail map among granite boulders", defaultPos: { side: "right", offset: 35, top: 1080, rotate: -2 } },
+						{ id: "10", src: "images/fulls/IMG_0613.JPG", thumb: "images/thumbs/IMG_0613.jpg", alt: "Outdoor group taking a break beside a mountain lake", defaultPos: { side: "left", offset: 28, top: 1430, rotate: -3 } },
+						{ id: "11", src: "images/fulls/IMG_0643.JPG", thumb: "images/thumbs/IMG_0643.jpg", alt: "Identifying wildflowers with a field guide", defaultPos: { side: "right", offset: 28, top: 1420, rotate: 3 } },
 						{ id: "12", src: "images/fulls/IMG_8465.JPG", thumb: "images/thumbs/IMG_8465.jpg", alt: "Backpacking group hiking a mountain trail", defaultPos: { side: "left", offset: 40, top: 1640, rotate: 2.5 } },
-						{ id: "13", src: "images/fulls/IMG_8988.JPG", thumb: "images/thumbs/IMG_8988.jpg", alt: "Hikers planning a route with a map", defaultPos: { left: 721, top: 823, width: 250, zIndex: 18, rotate: -2.5 } },
-						{ id: "14", src: "images/fulls/IMG_9162.JPG", thumb: "images/thumbs/IMG_9162.jpg", alt: "Children looking toward a waterfall on a hike", defaultPos: { left: 1247, top: 728, width: 250, zIndex: 20, rotate: -2 } },
-						{ id: "15", src: "images/fulls/IMG_8277.jpeg", thumb: "images/thumbs/IMG_8277.jpg", alt: "Youth rafting a rocky river", defaultPos: { left: 452, top: 869, width: 270, zIndex: 18, rotate: 2 } },
-						{ id: "16", src: "images/fulls/IMG_8314.jpeg", thumb: "images/thumbs/IMG_8314.jpg", alt: "Backpacking group crossing an alpine trail", defaultPos: { left: -20, top: 430, width: 335, zIndex: 12, rotate: -3 } }
+						{ id: "13", src: "images/fulls/IMG_8988.JPG", thumb: "images/thumbs/IMG_8988.jpg", alt: "Hikers planning a route with a map", defaultPos: { side: "right", offset: 40, top: 1700, rotate: -2.5 } },
+						{ id: "14", src: "images/fulls/IMG_9162.JPG", thumb: "images/thumbs/IMG_9162.jpg", alt: "Children looking toward a waterfall on a hike", defaultPos: { side: "left", offset: 32, top: 1930, rotate: -2 } },
+						{ id: "15", src: "images/fulls/IMG_8277.jpeg", thumb: "images/thumbs/IMG_8277.jpg", alt: "Youth rafting a rocky river", defaultPos: { side: "right", offset: 24, top: 1970, rotate: 2 } },
+						{ id: "16", src: "images/fulls/IMG_8314.jpeg", thumb: "images/thumbs/IMG_8314.jpg", alt: "Backpacking group crossing an alpine trail", defaultPos: { side: "left", offset: 38, top: 2200, rotate: -3 } }
 					];
 
 					const stage = document.getElementById('outdoorStage');
 					const photoElements = document.querySelectorAll('.draggable-photo');
-					// Fixed photo positions based on the saved desktop layout.
+					const STORAGE_KEY = 'outdoor_photos_positions_v2';
+					let highestZIndex = 15;
+
 					function applyDefaultPositions() {
 						const stageRect = stage.getBoundingClientRect();
-						const layoutScale = stageRect.width / 1463;
 						photoElements.forEach((el, index) => {
 							const cfg = photos[index];
 							const photoWidth = el.offsetWidth || 210;
-							let leftPx;
-							if (Number.isFinite(cfg.defaultPos.left)) {
-								leftPx = cfg.defaultPos.left * layoutScale;
-							} else if (cfg.defaultPos.side === "left") {
+							let leftPx = 0;
+							if (cfg.defaultPos.side === "left") {
 								leftPx = cfg.defaultPos.offset;
 							} else {
 								leftPx = Math.max(0, stageRect.width - photoWidth - cfg.defaultPos.offset);
 							}
 							el.style.left = leftPx + 'px';
-							el.style.top = (Number.isFinite(cfg.defaultPos.left) ? cfg.defaultPos.top * layoutScale : cfg.defaultPos.top) + 'px';
+							el.style.top = cfg.defaultPos.top + 'px';
 							el.style.transform = `rotate(${cfg.defaultPos.rotate}deg)`;
-							el.style.zIndex = cfg.defaultPos.zIndex || 10 + index;
-							if (cfg.defaultPos.width) {
-								el.style.width = `${Math.max(145, cfg.defaultPos.width * layoutScale)}px`;
-							}
+							el.style.zIndex = 10 + index;
+							highestZIndex = Math.max(highestZIndex, 10 + index);
 						});
 					}
 
-					// Keep photos fixed while retaining click and keyboard access to the lightbox.
+					function loadSavedPositions() {
+						try {
+							const saved = localStorage.getItem(STORAGE_KEY);
+							if (!saved) return false;
+							const parsed = JSON.parse(saved);
+							if (!parsed || typeof parsed !== 'object') return false;
+
+							applyDefaultPositions();
+
+							photoElements.forEach((el) => {
+								const savedPosition = parsed[el.dataset.id];
+								if (savedPosition && typeof savedPosition === 'object') {
+									if (savedPosition.left !== undefined) el.style.left = savedPosition.left;
+									if (savedPosition.top !== undefined) el.style.top = savedPosition.top;
+									if (savedPosition.zIndex) {
+										el.style.zIndex = savedPosition.zIndex;
+										highestZIndex = Math.max(highestZIndex, parseInt(savedPosition.zIndex, 10) || 0);
+									}
+									if (savedPosition.rotate !== undefined) {
+										el.style.transform = `rotate(${savedPosition.rotate}deg)`;
+									}
+									if (Number.isFinite(savedPosition.width) && savedPosition.width > 0) {
+										el.style.width = `${savedPosition.width}px`;
+									}
+								}
+							});
+							return true;
+						} catch (e) {
+							console.error('Failed to parse saved positions:', e);
+							return false;
+						}
+					}
+
+					function savePositions() {
+						const data = {};
+						photoElements.forEach((el, index) => {
+							data[el.dataset.id] = {
+								left: el.style.left,
+								top: el.style.top,
+								zIndex: el.style.zIndex || (10 + index),
+								rotate: photos[index].defaultPos.rotate,
+								width: el.style.width ? el.offsetWidth : null
+							};
+						});
+						localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+					}
+
+					// Drag photos to reposition and bring them above the others.
 					photoElements.forEach((el, index) => {
+						const resizeHandle = document.createElement('button');
+						resizeHandle.type = 'button';
+						resizeHandle.className = 'photo-resize-handle';
+						resizeHandle.setAttribute('aria-label', `Resize ${photos[index].alt}`);
+						resizeHandle.setAttribute('aria-keyshortcuts', 'ArrowUp ArrowDown ArrowLeft ArrowRight');
+						resizeHandle.title = 'Drag to resize photo';
+						el.appendChild(resizeHandle);
+
 						el.setAttribute('role', 'button');
 						el.setAttribute('tabindex', '0');
-						el.setAttribute('aria-label', `View photo: ${photos[index].alt}`);
-						el.addEventListener('click', () => openLightbox(index));
+						el.setAttribute('aria-label', `Drag to move and bring to front, or click to view: ${photos[index].alt}`);
+
+						let startX = 0;
+						let startY = 0;
+						let initialLeft = 0;
+						let initialTop = 0;
+						let isDragging = false;
+						let hasMoved = false;
+
+						el.addEventListener('pointerdown', (e) => {
+							if (e.target.closest('.photo-resize-handle')) return;
+							if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+							el.setPointerCapture(e.pointerId);
+							startX = e.clientX;
+							startY = e.clientY;
+							initialLeft = parseFloat(el.style.left) || el.offsetLeft;
+							initialTop = parseFloat(el.style.top) || el.offsetTop;
+							isDragging = true;
+							hasMoved = false;
+							highestZIndex += 2;
+							el.style.zIndex = highestZIndex;
+						});
+
+						el.addEventListener('pointermove', (e) => {
+							if (!isDragging) return;
+							const dx = e.clientX - startX;
+							const dy = e.clientY - startY;
+
+							if (!hasMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+								hasMoved = true;
+								document.body.classList.add('is-dragging-active');
+								el.classList.add('dragging');
+							}
+
+							if (hasMoved) {
+								const stageRect = stage.getBoundingClientRect();
+								const photoWidth = el.offsetWidth || 210;
+								const newLeft = Math.max(-40, Math.min(initialLeft + dx, stageRect.width - photoWidth + 40));
+								const newTop = Math.max(-20, Math.min(initialTop + dy, stage.offsetHeight - 60));
+								el.style.left = `${newLeft}px`;
+								el.style.top = `${newTop}px`;
+							}
+						});
+
+						const finishDrag = (e) => {
+							if (!isDragging) return;
+							isDragging = false;
+							if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
+
+							if (hasMoved) {
+								document.body.classList.remove('is-dragging-active');
+								el.classList.remove('dragging');
+								savePositions();
+							} else {
+								openLightbox(index);
+							}
+						};
+
+						el.addEventListener('pointerup', finishDrag);
+						el.addEventListener('pointercancel', finishDrag);
 						el.addEventListener('keydown', (e) => {
 							if (e.key === 'Enter' || e.key === ' ') {
 								e.preventDefault();
 								openLightbox(index);
 							}
+						});
+
+						let resizeStartX = 0;
+						let resizeStartY = 0;
+						let initialWidth = 0;
+						let isResizing = false;
+						let hasResized = false;
+
+						resizeHandle.addEventListener('pointerdown', (e) => {
+							if (e.button !== 0 && e.pointerType === 'mouse') return;
+							e.preventDefault();
+							e.stopPropagation();
+							resizeHandle.setPointerCapture(e.pointerId);
+							resizeStartX = e.clientX;
+							resizeStartY = e.clientY;
+							initialWidth = el.offsetWidth;
+							isResizing = true;
+							hasResized = false;
+							highestZIndex += 2;
+							el.style.zIndex = highestZIndex;
+						});
+
+						resizeHandle.addEventListener('pointermove', (e) => {
+							if (!isResizing) return;
+							const dx = e.clientX - resizeStartX;
+							const dy = e.clientY - resizeStartY;
+							const width = Math.max(120, Math.min(480, initialWidth + (dx + dy) / 2));
+							el.style.width = `${width}px`;
+							hasResized ||= Math.abs(dx) > 2 || Math.abs(dy) > 2;
+							if (hasResized) document.body.classList.add('is-dragging-active');
+						});
+
+						const finishResize = (e) => {
+							if (!isResizing) return;
+							isResizing = false;
+							if (resizeHandle.hasPointerCapture(e.pointerId)) resizeHandle.releasePointerCapture(e.pointerId);
+							document.body.classList.remove('is-dragging-active');
+							if (hasResized) savePositions();
+						};
+
+						resizeHandle.addEventListener('pointerup', finishResize);
+						resizeHandle.addEventListener('pointercancel', finishResize);
+						resizeHandle.addEventListener('keydown', (e) => {
+							const increase = e.key === 'ArrowUp' || e.key === 'ArrowRight';
+							const decrease = e.key === 'ArrowDown' || e.key === 'ArrowLeft';
+							if (!increase && !decrease) return;
+							e.preventDefault();
+							el.style.width = `${Math.max(120, Math.min(480, el.offsetWidth + (increase ? 20 : -20)))}px`;
+							savePositions();
 						});
 					});
 
@@ -677,8 +892,23 @@
 						}
 					}, { passive: true });
 
-					window.addEventListener('DOMContentLoaded', applyDefaultPositions);
-					window.addEventListener('resize', applyDefaultPositions);
+					window.addEventListener('DOMContentLoaded', () => {
+						if (!loadSavedPositions()) {
+							applyDefaultPositions();
+						}
+					});
+
+					window.addEventListener('load', () => {
+						if (!loadSavedPositions()) {
+							applyDefaultPositions();
+						}
+					});
+
+					window.addEventListener('resize', () => {
+						if (!localStorage.getItem(STORAGE_KEY)) {
+							applyDefaultPositions();
+						}
+					});
 
 				})();
 			</script>
