@@ -94,6 +94,35 @@
 				transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.22s ease;
 			}
 
+			.photo-resize-handle {
+				position: absolute;
+				right: -9px;
+				bottom: -9px;
+				z-index: 2;
+				width: 28px;
+				height: 28px;
+				padding: 0;
+				border: 2px solid #ffffff;
+				border-radius: 50%;
+				background: #1f1815;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+				cursor: nwse-resize;
+				touch-action: none;
+			}
+
+			.photo-resize-handle:before {
+				content: '';
+				position: absolute;
+				inset: 7px;
+				border-right: 2px solid #ffffff;
+				border-bottom: 2px solid #ffffff;
+			}
+
+			.photo-resize-handle:focus-visible {
+				outline: 3px solid #49bf9d;
+				outline-offset: 2px;
+			}
+
 			.draggable-photo.dragging {
 				cursor: grabbing !important;
 				z-index: 200 !important;
@@ -583,19 +612,25 @@
 							const parsed = JSON.parse(saved);
 							if (!parsed || typeof parsed !== 'object') return false;
 
+							applyDefaultPositions();
+
 							photoElements.forEach((el) => {
 								const id = el.dataset.id;
-								if (parsed[id]) {
-									el.style.left = parsed[id].left;
-									el.style.top = parsed[id].top;
-									if (parsed[id].zIndex) {
-										el.style.zIndex = parsed[id].zIndex;
-										if (parseInt(parsed[id].zIndex, 10) > highestZIndex) {
-											highestZIndex = parseInt(parsed[id].zIndex, 10);
+								const savedPosition = parsed[id];
+								if (savedPosition && typeof savedPosition === 'object') {
+									if (savedPosition.left !== undefined) el.style.left = savedPosition.left;
+									if (savedPosition.top !== undefined) el.style.top = savedPosition.top;
+									if (savedPosition.zIndex) {
+										el.style.zIndex = savedPosition.zIndex;
+										if (parseInt(savedPosition.zIndex, 10) > highestZIndex) {
+											highestZIndex = parseInt(savedPosition.zIndex, 10);
 										}
 									}
-									if (parsed[id].rotate !== undefined) {
-										el.style.transform = `rotate(${parsed[id].rotate}deg)`;
+									if (savedPosition.rotate !== undefined) {
+										el.style.transform = `rotate(${savedPosition.rotate}deg)`;
+									}
+									if (Number.isFinite(savedPosition.width) && savedPosition.width > 0) {
+										el.style.width = `${savedPosition.width}px`;
 									}
 								}
 							});
@@ -615,7 +650,8 @@
 								left: el.style.left,
 								top: el.style.top,
 								zIndex: el.style.zIndex || (10 + index),
-								rotate: cfg.defaultPos.rotate
+								rotate: cfg.defaultPos.rotate,
+								width: el.style.width ? el.offsetWidth : null
 							};
 						});
 						localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -623,6 +659,14 @@
 
 					// Drag and Drop
 					photoElements.forEach((el, index) => {
+						const resizeHandle = document.createElement('button');
+						resizeHandle.type = 'button';
+						resizeHandle.className = 'photo-resize-handle';
+						resizeHandle.setAttribute('aria-label', `Resize ${photos[index].alt}`);
+						resizeHandle.setAttribute('aria-keyshortcuts', 'ArrowUp ArrowDown ArrowLeft ArrowRight');
+						resizeHandle.title = 'Drag to resize photo';
+						el.appendChild(resizeHandle);
+
 						let startX = 0;
 						let startY = 0;
 						let initialLeft = 0;
@@ -631,6 +675,8 @@
 						let hasMoved = false;
 
 						el.addEventListener('pointerdown', (e) => {
+							if (e.target.closest('.photo-resize-handle')) return;
+
 							// Only react to primary mouse button or touch
 							if (e.button !== 0 && e.pointerType === 'mouse') return;
 
@@ -693,6 +739,57 @@
 
 						el.addEventListener('pointerup', handlePointerUp);
 						el.addEventListener('pointercancel', handlePointerUp);
+
+						let resizeStartX = 0;
+						let resizeStartY = 0;
+						let initialWidth = 0;
+						let isResizing = false;
+						let hasResized = false;
+
+						resizeHandle.addEventListener('pointerdown', (e) => {
+							if (e.button !== 0 && e.pointerType === 'mouse') return;
+							e.preventDefault();
+							e.stopPropagation();
+							resizeHandle.setPointerCapture(e.pointerId);
+							resizeStartX = e.clientX;
+							resizeStartY = e.clientY;
+							initialWidth = el.offsetWidth;
+							isResizing = true;
+							hasResized = false;
+							highestZIndex += 2;
+							el.style.zIndex = highestZIndex;
+						});
+
+						resizeHandle.addEventListener('pointermove', (e) => {
+							if (!isResizing) return;
+							const dx = e.clientX - resizeStartX;
+							const dy = e.clientY - resizeStartY;
+							const width = Math.max(120, Math.min(480, initialWidth + (dx + dy) / 2));
+							el.style.width = `${width}px`;
+							hasResized ||= Math.abs(dx) > 2 || Math.abs(dy) > 2;
+							if (hasResized) document.body.classList.add('is-dragging-active');
+						});
+
+						const finishResize = (e) => {
+							if (!isResizing) return;
+							isResizing = false;
+							try {
+								resizeHandle.releasePointerCapture(e.pointerId);
+							} catch (err) {}
+							document.body.classList.remove('is-dragging-active');
+							if (hasResized) savePositions();
+						};
+
+						resizeHandle.addEventListener('pointerup', finishResize);
+						resizeHandle.addEventListener('pointercancel', finishResize);
+						resizeHandle.addEventListener('keydown', (e) => {
+							const increase = e.key === 'ArrowUp' || e.key === 'ArrowRight';
+							const decrease = e.key === 'ArrowDown' || e.key === 'ArrowLeft';
+							if (!increase && !decrease) return;
+							e.preventDefault();
+							el.style.width = `${Math.max(120, Math.min(480, el.offsetWidth + (increase ? 20 : -20)))}px`;
+							savePositions();
+						});
 					});
 
 					// Lightbox Viewer
