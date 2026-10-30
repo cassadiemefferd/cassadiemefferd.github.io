@@ -102,14 +102,27 @@
 				transition: none !important;
 			}
 
-			.draggable-photo .photo-inner {
-				position: relative;
-				border-radius: 8px;
+			.draggable-photo .image.thumb {
+				margin: 0 !important;
+				display: block;
+				width: 100%;
+				border-radius: 0.35em;
 				overflow: hidden;
-				background: #ffffff;
 				box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-				line-height: 0;
-				border: 3px solid #ffffff;
+				transition: box-shadow 0.22s ease;
+			}
+
+			.draggable-photo .image.thumb:before {
+				background-image: none !important;
+				background-color: transparent !important;
+				box-shadow: none !important;
+				opacity: 0 !important;
+				pointer-events: none;
+				transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+			}
+
+			.draggable-photo .image.thumb:after {
+				pointer-events: none;
 			}
 
 			.draggable-photo img {
@@ -117,59 +130,36 @@
 				height: auto;
 				display: block;
 				pointer-events: none;
-				transition: filter 0.25s ease;
 			}
 
-			/* Hover State: Bring to front, grey out, show "View" */
+			/* Hover State: Bring to front, grey out with no vignette, show "View" */
 			.draggable-photo:hover {
 				z-index: 100 !important;
-				transform: scale(1.05) rotate(0deg);
+				transform: scale(1.04) rotate(0deg);
+			}
+
+			.draggable-photo:hover .image.thumb {
 				box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
 			}
 
-			.draggable-photo:hover img {
-				filter: grayscale(40%) brightness(0.6);
+			.draggable-photo:hover .image.thumb:after {
+				opacity: 1.0;
 			}
 
-			.draggable-photo .photo-overlay {
-				position: absolute;
-				inset: 0;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				opacity: 0;
-				pointer-events: none;
-				transition: opacity 0.22s ease;
-				background: rgba(20, 20, 20, 0.35);
+			.draggable-photo:hover .image.thumb:before {
+				background-image: none !important;
+				box-shadow: none !important;
+				background-color: rgba(20, 24, 30, 0.55) !important;
+				opacity: 1.0 !important;
 			}
 
-			.draggable-photo:hover .photo-overlay {
-				opacity: 1;
-			}
-
-			.draggable-photo.dragging .photo-overlay {
+			.draggable-photo.dragging .image.thumb:after {
 				opacity: 0 !important;
 			}
 
-			.draggable-photo.dragging img {
-				filter: none !important;
-			}
-
-			.photo-view-badge {
-				color: #ffffff;
-				font-size: 0.88em;
-				font-weight: 700;
-				letter-spacing: 0.14em;
-				text-transform: uppercase;
-				padding: 0.5em 1em;
-				border: 2px solid rgba(255, 255, 255, 0.95);
-				border-radius: 4px;
-				background: rgba(0, 0, 0, 0.6);
-				backdrop-filter: blur(4px);
-				display: inline-flex;
-				align-items: center;
-				gap: 0.5em;
-				box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+			.draggable-photo.dragging .image.thumb:before {
+				opacity: 0 !important;
+				background-color: transparent !important;
 			}
 
 			/* Photo Lightbox Modal */
@@ -406,47 +396,32 @@
 
 							<!-- Draggable Photos -->
 							<div class="draggable-photo" data-id="1" data-index="0" title="Click to view full photo">
-								<div class="photo-inner">
+								<div class="image fit thumb">
 									<img src="images/fulls/outdoor_note_1.png" alt="Camper debrief note 1" draggable="false" />
-									<div class="photo-overlay">
-										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
-									</div>
 								</div>
 							</div>
 
 							<div class="draggable-photo" data-id="2" data-index="1" title="Click to view full photo">
-								<div class="photo-inner">
+								<div class="image fit thumb">
 									<img src="images/fulls/outdoor_note_2.png" alt="Camper debrief note 2" draggable="false" />
-									<div class="photo-overlay">
-										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
-									</div>
 								</div>
 							</div>
 
 							<div class="draggable-photo" data-id="3" data-index="2" title="Click to view full photo">
-								<div class="photo-inner">
+								<div class="image fit thumb">
 									<img src="images/fulls/outdoor_note_3.png" alt="Camper debrief note 3" draggable="false" />
-									<div class="photo-overlay">
-										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
-									</div>
 								</div>
 							</div>
 
 							<div class="draggable-photo" data-id="4" data-index="3" title="Click to view full photo">
-								<div class="photo-inner">
+								<div class="image fit thumb">
 									<img src="images/fulls/outdoor_note_4.png" alt="Camper debrief note 4" draggable="false" />
-									<div class="photo-overlay">
-										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
-									</div>
 								</div>
 							</div>
 
 							<div class="draggable-photo" data-id="5" data-index="4" title="Click to view full photo">
-								<div class="photo-inner">
+								<div class="image fit thumb">
 									<img src="images/fulls/outdoor_note_5.png" alt="Camper debrief note 5" draggable="false" />
-									<div class="photo-overlay">
-										<span class="photo-view-badge"><i class="fas fa-eye"></i> View</span>
-									</div>
 								</div>
 							</div>
 
