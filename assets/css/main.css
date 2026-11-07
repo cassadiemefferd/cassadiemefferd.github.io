@@ -2725,6 +2725,19 @@ input, select, textarea {
 				padding-top: 0;
 			}
 
+	.youtube-video {
+		aspect-ratio: 16 / 9;
+		margin: 0 auto;
+		max-width: 560px;
+	}
+
+		.youtube-video iframe {
+			border: 0;
+			display: block;
+			height: 100%;
+			width: 100%;
+		}
+
 /* Poptrox */
 
 	@-moz-keyframes spin {
