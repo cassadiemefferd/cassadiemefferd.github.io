@@ -1212,6 +1212,10 @@ $size-header-pad: 4em;
 		}
 	}
 
+	#two .portfolio-divider {
+		margin-top: 0.5em;
+	}
+
 /* Poptrox */
 
 	@include keyframes('spin') {

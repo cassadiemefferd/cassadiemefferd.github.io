@@ -2738,6 +2738,10 @@ input, select, textarea {
 			width: 100%;
 		}
 
+	#two .portfolio-divider {
+		margin-top: 0.5em;
+	}
+
 /* Poptrox */
 
 	@-moz-keyframes spin {
